@@ -1,0 +1,325 @@
+{
+	"s:Envelope": {
+		"xmlns:s": "http://schemas.xmlsoap.org/soap/envelope/",
+		"s:Header": {},
+		"s:Body": {
+			"univ:AirCreateReservationReq": {
+				"xmlns:common_v41_0": "http://www.travelport.com/schema/common_v41_0",
+				"xmlns:univ": "http://www.travelport.com/schema/universal_v41_0",
+				"AuthorizedBy": "user",
+				"RetainReservation": "None",
+				"xmlns": "http://www.travelport.com/schema/air_v41_0",
+				"TraceId": "1982222261_1601282416",
+				"TargetBranch": "P3358955",
+				"BillingPointOfSaleInfo": {
+					"xmlns": "http://www.travelport.com/schema/common_v41_0",
+					"OriginApplication": "UAPI"
+				},
+				"BookingTraveler": {
+					"xmlns": "http://www.travelport.com/schema/common_v41_0",
+					"Key": "0",
+					"TravelerType": "ADT",
+					"DOB": "1990-09-28",
+					"Gender": "M",
+					"BookingTravelerName": {
+						"Prefix": "MR",
+						"First": "HIMANSHU",
+						"Last": "MALIK"
+					},
+					"PhoneNumber": {
+						"Number": "8767881524",
+						"Type": "Mobile"
+					},
+					"Email": {
+						"EmailID": "Rohit@misbaholidays.com",
+						"Type": "P"
+					},
+					"SSR": [
+						{
+							"Carrier": "AI",
+							"SegmentRef": "O5nb3SPc1BKAdGOUzCAAAA==",
+							"Status": "NN",
+							"Type": "AVML"
+						},
+						{
+							"FreeText": "P/IN/8884401698/IN/28Sep90/M/28Sep25/MALIK/HIMANSHU",
+							"Status": "HK",
+							"Type": "DOCS"
+						},
+						{
+							"xmlns": "http://www.travelport.com/schema/common_v41_0",
+							"Key": "1",
+							"Type": "GSTA",
+							"Carrier": "AI",
+							"Status": "NN",
+							"FreeText": "/IND/HAWARE FANTASIA BUSINESS PARK/VASHI/NAVI MUMBAI"
+						},
+						{
+							"xmlns": "http://www.travelport.com/schema/common_v41_0",
+							"Key": "2",
+							"Type": "GSTN",
+							"Carrier": "AI",
+							"Status": "NN",
+							"FreeText": "/IND/27AAHCM0059P1Z1/MISBA HOLIDAYS PVT LTD"
+						},
+						{
+							"xmlns": "http://www.travelport.com/schema/common_v41_0",
+							"Key": "3",
+							"Type": "GSTP",
+							"Carrier": "AI",
+							"Status": "NN",
+							"FreeText": "/IND/022 61475786/022 61475786"
+						},
+						{
+							"xmlns": "http://www.travelport.com/schema/common_v41_0",
+							"Key": "4",
+							"Type": "GSTE",
+							"Carrier": "AI",
+							"Status": "NN",
+							"FreeText": "/IND/Ejaz//misbaholidays.com"
+						}
+					],
+					"Address": {
+						"AddressName": "HIMANSHU",
+						"Street": "TEST",
+						"City": "TEST",
+						"State": "TEST",
+						"PostalCode": "560100",
+						"Country": "IN"
+					}
+				},
+				"FormOfPayment": {
+					"xmlns": "http://www.travelport.com/schema/common_v41_0",
+					"Type": "Cash"
+				},
+				"AirPricingSolution": {
+					"xmlns": "http://www.travelport.com/schema/air_v41_0",
+					"Key": "O5nb3SPc1BKAfGOUzCAAAA==",
+					"TotalPrice": "INR2905",
+					"BasePrice": "INR2330",
+					"ApproximateTotalPrice": "INR2905",
+					"ApproximateBasePrice": "INR2330",
+					"Taxes": "INR575",
+					"ApproximateTaxes": "INR575",
+					"QuoteDate": "2020-09-28",
+					"AirSegment": {
+						"Key": "O5nb3SPc1BKAdGOUzCAAAA==",
+						"Group": "0",
+						"Carrier": "AI",
+						"FlightNumber": "411",
+						"ProviderCode": "1G",
+						"Origin": "DEL",
+						"Destination": "LKO",
+						"DepartureTime": "2020-09-30T07:05:00.000+05:30",
+						"ArrivalTime": "2020-09-30T08:15:00.000+05:30",
+						"FlightTime": "70",
+						"TravelTime": "70",
+						"Distance": "263",
+						"ClassOfService": "S",
+						"Equipment": "32B",
+						"ChangeOfPlane": "false",
+						"OptionalServicesIndicator": "false",
+						"AvailabilitySource": "S",
+						"ParticipantLevel": "Secure Sell",
+						"LinkAvailability": "true",
+						"PolledAvailabilityOption": "O and D cache or polled status used with different local status",
+						"AvailabilityDisplayType": "Fare Specific Fare Quote Unbooked",
+						"CodeshareInfo": {
+							"OperatingCarrier": "AI"
+						},
+						"AirAvailInfo": {
+							"ProviderCode": "1G"
+						},
+						"FlightDetails": {
+							"Key": "O5nb3SPc1BKAeGOUzCAAAA==",
+							"Origin": "DEL",
+							"Destination": "LKO",
+							"DepartureTime": "2020-09-30T07:05:00.000+05:30",
+							"ArrivalTime": "2020-09-30T08:15:00.000+05:30",
+							"FlightTime": "70",
+							"TravelTime": "70",
+							"Distance": "263"
+						}
+					},
+					"AirPricingInfo": {
+						"Key": "O5nb3SPc1BKAhGOUzCAAAA==",
+						"TotalPrice": "INR2905",
+						"BasePrice": "INR2330",
+						"ApproximateTotalPrice": "INR2905",
+						"ApproximateBasePrice": "INR2330",
+						"ApproximateTaxes": "INR575",
+						"Taxes": "INR575",
+						"LatestTicketingTime": "2020-09-30T23:59:00.000+05:30",
+						"PricingMethod": "Guaranteed",
+						"IncludesVAT": "false",
+						"ETicketability": "Yes",
+						"PlatingCarrier": "AI",
+						"ProviderCode": "1G",
+						"FareInfo": {
+							"Key": "O5nb3SPc1BKAmGOUzCAAAA==",
+							"FareBasis": "SIP",
+							"PassengerTypeCode": "ADT",
+							"Origin": "DEL",
+							"Destination": "LKO",
+							"EffectiveDate": "2020-09-28T14:08:00.000+05:30",
+							"DepartureDate": "2020-09-30",
+							"Amount": "INR2330",
+							"NotValidBefore": "2020-09-30",
+							"NotValidAfter": "2020-09-30",
+							"FareRuleKey": {
+								"FareInfoRef": "O5nb3SPc1BKAmGOUzCAAAA==",
+								"ProviderCode": "1G",
+								"$t": "6UUVoSldxwhjDeEQUfpn3MbKj3F8T9EyxsqPcXxP0TLGyo9xfE/RMsuWFfXVd1OAly5qxZ3qLwOXLmrFneovA5cuasWd6i8Dly5qxZ3qLwOXLmrFneovA4U/UuC8/Pq3NAF/izIfuYdfHMK8e3nzhmoKQGai5xNzjA6MsGNvMT1SD5QULEHOHadwjMHbhzGec7noBKk7SldlmzapJzTWH8siOHFaFMf8hf6E18cRejGVqfCTByZWB98KxJ35Bj3Drxa4kYfhAhHqNbjwzJx7oo0sKBvhNXxaFHpjnmZFIWFmrnLh1p/LTEACA4xcw3/+ly5qxZ3qLwOXLmrFneovA5cuasWd6i8Dly5qxZ3qLwOXLmrFneovA4q+cJFUBzriwNmwgE7MqQt7PHybnt8kEFNFX/4N2RTghOW5Q29uMMJY/MdLiTjsbGbeWZkRGLN3KAxevs8wf8A="
+							}
+						},
+						"BookingInfo": {
+							"BookingCode": "S",
+							"CabinClass": "Economy",
+							"FareInfoRef": "O5nb3SPc1BKAmGOUzCAAAA==",
+							"SegmentRef": "O5nb3SPc1BKAdGOUzCAAAA=="
+						},
+						"TaxInfo": [
+							{
+								"Category": "K3",
+								"Amount": "INR125",
+								"Key": "O5nb3SPc1BKAiGOUzCAAAA=="
+							},
+							{
+								"Category": "P2",
+								"Amount": "INR189",
+								"Key": "O5nb3SPc1BKAjGOUzCAAAA=="
+							},
+							{
+								"Category": "WO",
+								"Amount": "INR91",
+								"Key": "O5nb3SPc1BKAkGOUzCAAAA=="
+							},
+							{
+								"Category": "YR",
+								"Amount": "INR170",
+								"Key": "O5nb3SPc1BKAlGOUzCAAAA=="
+							}
+						],
+						"FareCalc": "DEL AI LKO 2330SIP INR2330END",
+						"PassengerType": {
+							"Code": "ADT",
+							"BookingTravelerRef": "0"
+						},
+						"ChangePenalty": {
+							"Percentage": "0.00"
+						},
+						"BaggageAllowances": {
+							"BaggageAllowanceInfo": {
+								"TravelerType": "ADT",
+								"Origin": "DEL",
+								"Destination": "LKO",
+								"Carrier": "AI",
+								"URLInfo": {
+									"URL": "VIEWTRIP.TRAVELPORT.COM/BAGGAGEPOLICY/AI"
+								},
+								"TextInfo": {
+									"Text": [
+										"25K",
+										"BAGGAGE DISCOUNTS MAY APPLY BASED ON FREQUENT FLYER STATUS/ ONLINE CHECKIN/FORM OF PAYMENT/MILITARY/ETC."
+									]
+								},
+								"BagDetails": [
+									{
+										"ApplicableBags": "1stChecked",
+										"BaggageRestriction": {
+											"TextInfo": {
+												"Text": "CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE"
+											}
+										}
+									},
+									{
+										"ApplicableBags": "2ndChecked",
+										"BaggageRestriction": {
+											"TextInfo": {
+												"Text": "CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE"
+											}
+										}
+									}
+								]
+							},
+							"CarryOnAllowanceInfo": {
+								"Origin": "DEL",
+								"Destination": "LKO",
+								"Carrier": "AI",
+								"TextInfo": {
+									"Text": "8K"
+								},
+								"CarryOnDetails": [
+									{
+										"ApplicableCarryOnBags": "1",
+										"BasePrice": "",
+										"TotalPrice": "",
+										"BaggageRestriction": {
+											"TextInfo": {
+												"Text": "CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE"
+											}
+										}
+									},
+									{
+										"ApplicableCarryOnBags": "2",
+										"BasePrice": "",
+										"TotalPrice": "",
+										"BaggageRestriction": {
+											"TextInfo": {
+												"Text": "CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE"
+											}
+										}
+									}
+								]
+							}
+						}
+					},
+					"FareNote": [
+						{
+							"Key": "O5nb3SPc1BKA7GOUzCAAAA==",
+							"$t": "LAST DATE TO PURCHASE TICKET: 30SEP20"
+						},
+						{
+							"Key": "O5nb3SPc1BKA8GOUzCAAAA==",
+							"$t": "TICKETING AGENCY 52MX"
+						},
+						{
+							"Key": "O5nb3SPc1BKA9GOUzCAAAA==",
+							"$t": "DEFAULT PLATING CARRIER AI"
+						},
+						{
+							"Key": "O5nb3SPc1BKA+GOUzCAAAA==",
+							"$t": "FARE HAS A PLATING CARRIER RESTRICTION"
+						},
+						{
+							"Key": "O5nb3SPc1BKA/GOUzCAAAA==",
+							"$t": "E-TKT REQUIRED"
+						},
+						{
+							"Key": "O5nb3SPc1BKAAHOUzCAAAA==",
+							"$t": "TICKETING FEES MAY APPLY"
+						}
+					],
+					"HostToken": {
+						"xmlns": "http://www.travelport.com/schema/common_v41_0",
+						"Key": "O5nb3SPc1BKAgGOUzCAAAA==",
+						"$t": "GFB10101ADT00  01SIP                                   010001#GFB200010101NADTV3302AI0406900001997R#GFMCEIP302NAI04 AI ADTSIP"
+					}
+				},
+				"ActionStatus": {
+					"ProviderCode": "1G",
+					"TicketDate": "T*",
+					"Type": "ACTIVE",
+					"QueueCategory": "01",
+					"xmlns": "http://www.travelport.com/schema/common_v41_0"
+				},
+				"SpecificSeatAssignment": {
+					"xmlns": "http://www.travelport.com/schema/air_v41_0",
+					"SeatId": "5C",
+					"BookingTravelerRef": "0",
+					"SegmentRef": "O5nb3SPc1BKAdGOUzCAAAA=="
+				}
+			}
+		}
+	}
+}

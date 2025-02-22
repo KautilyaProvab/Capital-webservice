@@ -1,0 +1,27 @@
+{
+    "accommodation": [
+      44703,
+      44704,
+      1258780
+    ],
+    "checkIn": "2025-02-19",
+    "checkOut": "2025-02-21",
+    "occupancy": {
+      "leaderNationality": 44,
+      "rooms": [
+        {
+          "adults": 1,
+          "childrenAges": [
+            
+          ]
+        }
+      ]
+    },
+    "language": "en_GB",
+    "timeout": 10,
+    "providers": [
+      "expediarapid"
+    ],
+    "sellingChannel": "B2B",
+    "source": "seller"
+  }

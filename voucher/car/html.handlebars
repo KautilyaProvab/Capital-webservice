@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     
+        <table id="print_voucher" cellpadding="0" cellspacing="0" width="100%" class="table" style="font-size: 13px; margin: 0px auto; background-color: #f5f5f5; -webkit-print-color-adjust: exact; padding:12px; font-family: verdana">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <table style="width: 100%; border-bottom: 2px solid #000000; padding: 10px 10px; background-color: #f5f5f5;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" style="text-align: left; padding: 10px;"><img src="http://54.198.46.240/b2c/assets/images/logo.png" style="background: #000; width: 60px;"></td>
+                                    <td colspan="2" style="color: #333; line-height: 20px; padding: 10px; text-align: right;">
+                                        <span style="margin: 0px; float: right; font-size: 14px; font-weight: bold; font-size: 14px; border: 1px solid #4169e1; background: #4169e1; padding: 7px 14px; display: block; border-radius: 5px; color: #fff; margin-bottom: 4px;">Booking Ref - {{bookingRef}}</span>
+                                        <span style="margin: 0px; float: right; font-size: 14px; font-weight: bold; font-size: 14px; border: 1px solid #4169e1; background: #4169e1; padding: 7px 14px; display: block; border-radius: 5px; color: #fff; margin-bottom: 4px;">Booking Id - {{app_reference}}</span>
+                                        <p style="margin: 0; font-size: 13px; color: #2196f3; font-weight: bold; clear: both;">Supplier - {{supplier}}</p>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding: 0 12px;">
+                <tr>
+                    <td colspan="2" style="padding: 0 0px;">
+                        <h4 style="color: #000; margin: 0px; font-weight: bold; font-size: 16px; padding: 5px 0px;">Car Details</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0px; vertical-align:top;">
+                        <table style="background: #fff; box-shadow: 0 0 2px 0 rgb(0 0 0 / 8%), 0 2px 8px 0 rgb(0 0 0 / 16%); margin-bottom: 15px; width: 100%; color: #000; font-size: 13px; text-align: left; margin-top: 10px;">
+                            <tr>
+                                <td style="width: 33%; vertical-align:top;"><div><img alt="Car Image" style="width: 100%;" src="{{picture_url}}" onerror="this.onerror=null;this.src='http://54.198.46.240/b2c/assets/images/carfiesta_lrg.jpg';"></div></td>
+                                <td style="width: 67%; vertical-align:top;padding-left:10px;">
+                                    <span style="color: #000 !important; font-size: 16px; font-weight: 700; display: block; text-transform: uppercase; margin-top: 12px; display: block;">{{Bookings.car_name}}</span><span style="position: relative; top: 2px; padding: 0; font-size: 11px; display: block; margin-bottom: 8px;"><img src="http://54.198.46.240/b2c/assets/images/star_rating_55.png" alt=""></span><span style="color: #767676; display: block; font-size: 14px; margin-right: 2px; padding-top: 0px;">Supplied by: <img style="height:40px" alt="" src="{{SupplierLogo}}"></span>
+                                    <div style="display: inline-block; margin-top: 6px; margin-bottom: 8px;">
+
+                                        <div  placement="top" tooltip="Passengers" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/user.png" alt="" style="margin-right: 6px;"></span>{{bookingData.pass_quantity}}</div>
+
+                                        <div placement="top" tooltip="Doors" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/cardoor.png" alt="" style="margin-right: 6px;"></span>{{bookingData.door_count}}</div>
+
+                                        <div placement="top" tooltip="Bags" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px;margin-top:2px; margin-right: 6px; float:left;" src="http://54.198.46.240/b2c/assets/images/baggage.png" alt="" style="margin-right: 6px;"></span>{{bookingData.bagg_quantity}}</div>
+                                        {{#if air_condition}}
+                                        <div placement="top" tooltip="This car has air conditioning"  style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor airc"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/carair.png" alt="" style="margin-right: 6px;"></span></div>
+                                        {{/if}}
+                                        <div placement="top" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px;" src="http://54.198.46.240/b2c/assets/images/gearboxs.png" alt="" style="margin-right: 6px;">{{bookinData.transmission_type}}</span></div>
+                                    </div>
+                                    <br>
+                                    <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; margin-top: 3px; font-size: 14px;">
+                                            <span style="color: #000;display: inline-block; font-weight: 700;"><img style="width: 13px; height: 13px;margin-top:2px; margin-right: 6px; float:left;" src="http://54.198.46.240/b2c/assets/images/tachometer.png" alt="" style="margin-right: 6px;"> Mileage: &nbsp;</span> <span> {{bookingData.unlimited}}</span></p>
+                                             
+                                    </div>
+                                    <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; margin-top: 3px; font-size: 14px;">
+                                            <span style="color: #000; display: inline-block; font-weight: 700;">
+                                            </span>
+                                            <span>Fuel policy :{{Bookings.FuelInformation}}|{{Bookings.FuelType}}</span>
+                                        </p>
+                                        
+                                    </div>
+                                    {{!-- {{#if accountInfo}}
+                                     <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; margin-top: 3px; font-size: 14px;">
+                                            <span style="color: #000; display: inline-block; font-weight: 700;">
+                                            </span>IATA-No :{{accountInfo['IATA-No']['$t']}} </span>
+                                            <span style="color: #000; display: inline-block; font-weight: 700;">
+                                            </span>AV.No :{{accountInfo['AV.No']['$t']}} </span>
+                                        </p>
+                                        
+                                    </div>
+                                    {{/if}} --}}
+                                    <div style=" margin-top: 8px; margin-bottom: 5px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; margin-top: 3px; font-size: 14px;"><span style="color: #000; display: inline-block;font-weight: 700;"><img style="width: 13px; height: 13px;margin-top:2px; margin-right: 6px; float:left;" src="http://54.198.46.240/b2c/assets/images/supplier_Car.png" alt="" style="margin-right: 6px;">Supplier Identifier: &nbsp;</span> <span> {{Bookings.supplier_identifier}}</span></p> 
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; vertical-align:top;">
+                        <table cellspacing="0" style="background: #fff; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); margin-bottom: 15px; width: 100%; color: #000; font-size: 13px; text-align: left; margin-top: 10px;">
+                            <tbody>
+                                <tr style="margin: 0; color: #fff; background-color: #000; padding: 10px;">
+                                    <th style="padding: 10px 8px; width: 20%;">Pick-up Location</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Pick-up Date/Time</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Drop-Off Location</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Drop-Off Date/Time</th>
+                                </tr>
+                                <tr style="font-size: 12px; line-height: normal;">
+                                    <td style="border-bottom: 1px solid #000; padding: 12px; vertical-align:top;">
+                                        <p style="margin: 9px 0px;">{{pickUpAddress}}&nbsp;{{pickupLocation}}</p>
+                                        <p style="margin: 9px 0px;">Telephone :{{pickup_telephone}}</p>
+                                        <p style="margin: 9px 0px;">Opening Hours : {{PickUpOpeningHours}}</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px; vertical-align:top;">
+                                        <p >{{pickupDateTime}}</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px; vertical-align:top;">
+                                        <p style="margin: 9px 0px;">{{dropAddress}}&nbsp;{{dropLocation}}</p>
+                                        <p style="margin: 9px 0px;">Telephone :{{drop_telephone}}</p>
+                                        <p style="margin: 9px 0px;">Opening Hours : {{DropOpeningHours}}</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px; vertical-align:top;">
+                                        <p>{{dropDateTime}}</p>
+                                    </td>
+                                </tr>
+                                <tr style="margin: 0; color: #fff; background-color: #000; padding: 10px;">
+                                    <td colspan="4" style="padding: 0px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Booked Date</th>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Trip Type</th>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Status</th>
+                                                {{!-- <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Opening hours</th> --}}
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr style="font-size: 14px;">
+                                    <td colspan="4" style="padding: 0px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style=" padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">{{BookedDate}}</p>
+                                                </td>
+                                                <td style="padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">{{RoundTrip}}</p>
+                                                </td>
+                                                <td style="padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">{{BookingStatus}}</p>
+                                                </td>
+                                                {{!-- <td style=" padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">Mon - Sun {{OpeningHours}}</p>
+                                                </td> --}}
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="border-top: 2px solid #000; padding: 12px; width:40%; padding-right: 0px; font-size: 14px; line-height: 23px; vertical-align: top;">
+                                        <p style="margin: 0;"><b>Booked by :</b></p>
+                                        <p style="margin: 0;">{{bookedBy.name}},</p>
+                                        <p style="margin: 0;">{{bookedBy.city}},{{bookedBy.country}}</p>
+                                        <p style="margin: 0;">{{bookedBy.email}},</p>
+                                        <p style="margin: 0;">{{bookedBy.phone}}</p>
+                                        {{#if driver}}
+                                        <p style="margin: 0;"></p>
+                                        <p style="margin: 0;"><b>Driver Details :</b></p>
+                                        <p style="margin: 0;">Name : {{driver.firstName}} {{driver.lastName}}</p>
+                                        {{!-- <p style="margin: 0;">Age : {{DriverAge}}</p> --}}
+                                        <p style="margin: 0;">License Issued by : {{driver.driverLicenseIssueCountry}}</p>
+                                        <p style="margin: 0;">License No : {{driver.driverLicenseNo}}</p>
+                                        <p style="margin: 0;"><b>Flight No/Info : </b>{{FlightInfo}}</p>
+                                        {{/if}}
+                                    </td>
+                                    <td colspan="2" style="border-top: 2px solid #000; padding: 12px; width:60%; padding-right: 10px; font-size: 14px;">
+                                        <p style="text-align: right; margin: 0 0 0px 0;"><b><label style="padding: 0px 0px 0px 0px;">Total Rental Price</label><span style="width: 120px; display: inline-block;">{{totalRentalPrice}}</span></b></p>
+                                        <p style="text-align: right; margin: 0 0 4px 0;"><b><label style="padding: 0px 0px 0px 0px;">Coupon Discount ({{PromoCodeName}})</label><span style="width: 120px; display: inline-block;">$ {{PromoCodeDiscount}}</span></b></p>
+                                        <p style="text-align: right; margin: 0 0 4px 0;"><b><label style="padding: 0px 0px 0px 0px;">Convience Fee</label><span style="width: 120px; display: inline-block;">${{convinenceFee}}</span></b></p>
+                                         {{#if FullProtection}}
+                                        <p style="text-align: right; margin: 0 0 7px 0;"><b><label style="padding: 0px 0px 0px 0px;">{{FullProtection.description}}</label><span style="width: 120px; display: inline-block;">{{FullProtection.amount}}</span></b></p>
+                                         {{/if}}
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; border-top: 1px solid #ccc; font-size: 16px; color: royalblue;"><label style="padding: 0px 0px 0px 0px;">Amount Paid</label><span style="width: 120px; display: inline-block;">{{amountPaid}}</span></b></p>
+                                        <h6 style="text-align: right;">Pay at the Pickup(Due Amount)</h6>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">OnewayFee</label><span style="width: 120px; display: inline-block;">{{OnewayFee}}</span></p>
+                                        </span>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">OtherTaxes</label><span style="width: 120px; display: inline-block;">{{OtherTaxes}}</span></p>
+                                        </span>
+                                        <span>
+                                        </span>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">YoungDriverAmount</label><span style="width: 120px; display: inline-block;">{{YoungDriverAmount}}</span></p>
+                                        </span>
+                                        {{#each CarBookingExtras}}
+                                           <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">{{this.quantity}}x{{this.description}}</label><span style="width: 120px; display: inline-block;">{{this.amount}}</span></p> 
+                                            </span>
+                                        {{/each}}
+                                        {{!-- <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; border-top: 1px solid #ccc; font-size: 16px; color: royalblue;"><span style="width: 120px; display: inline-block;">{{TotalChargeSum}}</span></b></p> --}}
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; font-size: 16px; color: royalblue;"><label style="padding: 0px 0px 0px 0px;">Extras Total</label><span style="width: 120px; display: inline-block;">$ {{extraTotal}}</span></b></p>
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; font-size: 16px; color: royalblue;"><label style="padding: 0px 0px 0px 0px;">Grand Total</label><span style="width: 120px; display: inline-block;">$ {{GrandTotal}}</span></b></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                {{#if pricedCoverageLength}}
+                <tr>                   
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Price Inclusions</h4>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        {{#each pricedCoverage}}
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                {{#if this.IncludedInRate}}
+                                <img style="width: 13px; height: 13px;margin-top:2px; margin-right: 6px; float:left;" src="http://54.198.46.240/b2c/assets/images/check_tick.png" alt="" style="margin-right: 6px;">
+                                {{else}}
+                                <img style="width: 13px; height: 13px;margin-top:2px; margin-right: 6px; float:left;" src="http://54.198.46.240/b2c/assets/images/uncheck_tick.png" alt="" style="margin-right: 6px;">
+                                {{/if}}
+                                <span class="pricert">{{this.Amount}}</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov10"> {{this.Description}} </div>
+                        </ul>
+                        {{/each}}
+                    </td>
+                </tr>
+                {{/if}}
+
+                 {{#if FullProtectionInclusionList}}
+                 <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Insurance Details</h4>
+                    </td>
+
+                    
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        {{#each FullProtectionInclusionList}}
+                        <p style="margin-bottom: 4px;">
+                            {{this.Title}}
+                        </p>
+                        {{/each}}
+                    </td>
+                </tr>
+                {{/if}}
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Pickup Opening Hours</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        {{#each FullPickUpOpeningHours}}
+                        <p style="margin-bottom: 4px;">
+                            {{this.Day}}  {{this.Start }} - {{this.End}}
+                        </p>
+                        {{/each}}
+                    </td>
+                </tr>
+                 <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Drop Off Opening Hours</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        {{#each FullDropUpOpeningHours}}
+                        <p style="margin-bottom: 4px;">
+                            {{this.Day}}  {{this.Start }} - {{this.End}}
+                        </p>
+                        {{/each}}
+                    </td>
+                </tr>
+                  <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Fuel Information</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        <p style="margin-bottom: 4px;">
+                            {{FuelInformationDescription}}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Cancellation Policy</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        {{#each cancelPolicy}}
+                        <p style="margin-bottom: 4px;">
+                            {{this.Amount}} Would be charged between {{this.FromDate }} To {{this.ToDate}}
+                        </p>
+                        {{/each}}
+                    </td>
+                </tr>
+                <tr>
+               
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; margin-top: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Terms &amp; Conditions</h4>
+                    </td>
+                </tr>
+                <tr style="box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); margin-bottom: 15px;">
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; padding: 15px; color: #555;">
+                        {{#each terms}}
+                            <p style="margin-bottom: 4px;">{{this.key}} - {{this.value}}</p>
+                        {{/each}}
+                    </td>
+                </tr>
+
+                </td></tr>
+            </tbody>
+        </table>
+</body>
+</html>

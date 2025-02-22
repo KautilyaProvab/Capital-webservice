@@ -1,0 +1,293 @@
+<table cellpadding="0" border-collapse="" cellspacing="0" width="100%"
+  style="font-size: 11px; font-family: 'Open Sans', sans-serif; max-width: 850px;  border-radius: 5px; margin: 12px auto; background-color: #fff; padding:18px; border-collapse: separate; color: #000;">
+  <tbody style="-webkit-print-color-adjust: exact;">
+    <tr>
+      <td colspan="2" style="padding-bottom: 10px;  border-bottom: 1px solid #ddd;"><img
+          src="http://54.198.46.240/nosafer/assets/tlntrip/images/logo.png" style="width: 90px; "></td>
+
+    </tr>
+
+    <tr>
+      <td style="line-height: 15px; padding: 0;">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td colspan="2" style="font-size: 11px; line-height:9px;"><span style="font-weight: 500;">Dear
+          {{passengerDetails.0.first_name}} {{passengerDetails.0.middle_name}}
+          {{passengerDetails.0.last_name}},</span><br><br>Thank you for making your booking with Booking247, below are the
+        details of your itinerary.<br><br>Your Booking247 Refernce No is <span
+          style="font-weight: 500; color:#189ad3;">{{app_reference}}</span></td>
+    </tr>
+    {{#if agent_pdf_data}}
+
+    <tr>
+      <td style="height: 15px; line-height: 0px;">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="3" style="padding: 3px 0px;"><span style="font-size: 11px;"><span
+            style="color:#007cb2; font-weight: 500;">Agency Name</span> - {{business_name}}</span></td>
+    </tr>
+    <tr>
+      <td colspan="3" style="padding: 3px 0px;"><span style="font-size: 11px;"><span
+            style="color:#007cb2; font-weight: 500;">Agency Number</span> - {{business_number}}</span></td>
+    </tr>
+    {{/if}}
+
+    <tr>
+      <td style="height: 15px; line-height: 0px;">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        <table
+          style="width: 100%; border-top: 1px solid #ddd;border-bottom: 1px solid #ddd; margin: 0px 0px; display: table; background-color: #fff; padding: 5px 10px;">
+          <tr>
+
+            <td style="padding: 0px 5px; font-size: 11px;">
+              {{!-- <strong style="font-size: 11px; color: #004363;"> {{flightInfo.0.from_airport_code}} to {{flightInfo.0.to_airport_code}} </strong> {{booked_on}}  --}}
+            </td>
+
+            <td style="padding:0px 0;text-align: right; font-weight: bold;">
+              <span style="font-size:11px;">
+                <span style="color:#004363;padding:5px;">
+                  Airline PNR :
+                  <span style="font-size: 13px; color: #1a9ad3;">
+                    {{airline_pnr}}
+                  </span>
+                </span>
+                <span style="color:#004363;padding:5px;">
+                  GDS PNR :
+                  <span style="font-size: 13px; color: #1a9ad3;">
+                    {{gds_pnr}}
+                  </span>
+                </span>
+              </span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="line-height: 5px; height:15px; padding: 0;">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td colspan="4" style="border-bottom:2px solid #004363; padding:0; border-radius: 5px; overflow: hidden;">
+        <table cellspacing="0" cellpadding="5" width="100%" style="font-size:12px; padding:0;">
+          <tbody>
+            <tr>
+
+
+
+              <th
+                style="background-color:#189AD3; color:#fff; padding: 10px; text-align:left; border-right:2px solid #004363;">
+                Passenger Name</th>
+              {{!-- <th
+                style="background-color:#189AD3; color:#fff; padding: 10px; text-align:left; border-right:2px solid #004363;">
+                Type</th>
+              <th
+                style="background-color:#189AD3; color:#fff; padding: 10px; text-align:left; border-right:2px solid #004363;">
+                Passport No</th> --}}
+              <th style="background-color:#189AD3; text-align:left; color:#fff; padding: 10px; ">Ticket No</th>
+
+            </tr>
+
+            {{#each passengerDetails}}
+            <tr>
+              <td style="padding:4px 10px; font-size: 11px; border-right:2px solid #004363;">{{this.first_name}}
+                {{this.middle_name}} {{this.last_name}} </td>
+              {{!-- <td style="padding:4px 10px; font-size: 11px; border-right:2px solid #004363;">{{this.passenger_type}}
+              </td>
+              <td style="padding:4px 10px; font-size: 11px; border-right:2px solid #004363;">{{this.passport_number}}
+              </td> --}}
+              <td style="padding:4px 10px; font-size: 11px; ">{{this.ticket_no}}</td>
+              {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td style="line-height: 5px; height:15px; padding: 0;">&nbsp;</td>
+    </tr>
+
+
+    <tr>
+      <td colspan="4" style="border-radius: 5px; padding: 0;">
+        {{#each flightInfo}}
+        <table cellspacing="0" cellpadding="5" width="100%"
+          style="font-size: 11px; padding: 0; border-bottom:1px solid #ddd;">
+          <tbody>
+            <tr>
+              <td style="line-height: 5px; padding: 0;">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><strong style="font-size: 12px; color: #004363;">{{this.from_airport_code}} - {{this.to_airport_code}}
+                </strong></td>
+            </tr>
+
+            <tr>
+              <td colspan="4" style="padding: 0;">
+                <table cellspacing="0" cellpadding="5" width="100%"
+                  style="font-size: 11px; line-height: 20px; padding: 0;">
+                  <tr>
+                    <td style="color: #004363; padding: 0px; padding-bottom: 0px; font-size: 10px; font-weight: 600;">
+                      <img src="http://54.198.46.240/nosafer/airline_logo/{{this.airline_code}}.svg" style="width: 60px;">
+                      <div class="clearfix"></div><span> {{this.airline_name}} | {{this.flight_number}} </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 33.33%; padding: 0px; font-size: 11px; line-height: 16px;"><span><span
+                          style="font-size: 11px; padding-left: 0px; vertical-align: middle;"><span
+                            style="font-weight: 500; padding-right: 0px;">
+                            {{this.from_airport_name}} ({{this.from_airport_code}}) </span>
+                        </span>
+                        <br> {{this.departure_datetime}}
+
+                      </span>
+                    </td>
+                    <td style="width: 33.33%; font-size:11px; line-height: 16px;"><span
+                        style="display: block; padding-left: 0%; text-align: center;"> <span
+                          style="font-weight: 500;">{{this.duration}}</span> <br> {{cabin_class}} </span></td>
+
+                    <td style="width: 33.33%; text-align: right; line-height: 16px; font-size: 11px; padding: 0px;">
+                      <span>
+                        <span style="font-size: 11px; padding-left: 0px; vertical-align: middle;">
+                          <span style="font-weight: 500; padding-right: 0px;">
+                            {{this.to_airport_name}} ({{this.to_airport_code}}) </span></span>
+                        <br> {{this.arrival_datetime}}
+
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td colspan="3" style="padding: 6px 0px;"><span style="font-size: 11px;">
+                        <span style="color:#007cb2; font-weight: 500;">Baggage Info</span> - Cabin:
+                        {{this.cabin_baggage}}, Check-in:{{this.checkin_baggage}} </span></td>
+                  </tr>
+
+                </table>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+        {{/each}}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="line-height: 15px; padding: 0;">&nbsp;</td>
+    </tr>
+
+    {{!-- 
+    <tr>
+      <td colspan="4" style="border-bottom:2px solid #004363; padding:0; border-radius: 5px; overflow: hidden;">
+        <table cellspacing="0" cellpadding="5" width="100%" style="font-size:12px; padding:0;">
+          <tbody>
+            <tr>
+              <td colspan="2" style="background-color:#189AD3; color:#fff; padding: 10px;">
+                <span style="vertical-align:middle;font-size:11px; font-weight: 600; ">
+                  Customer Contact Details
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 10px; width: 50%; font-size: 11px;">
+                <span>
+                  E-mail : ISLAM.NAHID.COM
+                </span>
+              </td>
+              <td style="padding:5px 10px; width: 50%; font-size: 11px;">
+                <span>
+                  Contact No : +880 12345678
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr> --}}
+
+
+    <tr>
+      <td colspan="4" style="padding:0;">
+        <table cellspacing="0" cellpadding="5" width="100%" style="font-size:11px; padding:0;">
+          <tbody>
+            <tr>
+              <td width="100%" style="padding:0;padding-right:0px;">
+                <table cellspacing="0" cellpadding="5" width="100%"
+                  style="font-size:11px; line-height:13px; padding:0; border-radius:5px; overflow:hidden;">
+                  <tbody>
+                    <tr style="background: #189AD3;">
+                      <td style="border-bottom:1px solid #ccc; padding:4px 10px;"><span
+                          style="font-size:11px; font-weight: 600; color: #fff;">Payment Details</span>
+                      </td>
+                      <td style="border-bottom:1px solid #ccc; padding:4px 10px;"><span
+                          style="font-size:11px; font-weight: 600; color: #fff;">Amount (BDT)</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding:4px 10px;"><span>Base Fare</span>
+                      </td>
+                      <td style="text-align: left; padding:4px 10px;"><span>{{airFare}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left; padding:4px 10px;"><span>Tax</span>
+                      </td>
+                      <td style="text-align: left; padding:4px 10px;"><span>{{tax}}</span>
+                      </td>
+                    </tr>
+                     <tr>
+                      <td style="text-align: left; padding:4px 10px;"><span>AIT</span>
+                      </td>
+                      <td style="text-align: left; padding:4px 10px;"><span>{{ait}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="border-top:1px solid #ccc; padding:4px 10px;"><span
+                          style="font-size:12px; font-weight: bold;">Grand Total</span>
+                      </td>
+                      <td style="border-top:1px solid #ccc; padding:4px 10px;"><span
+                          style="font-size:12px; font-weight: bold;">{{grandTotal}}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
+            </tr>
+            <tr>
+              <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="line-height: 10px; padding: 0;">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td colspan="2" style="font-size: 11px; line-height:11px;">If there’s anything we can do to help, please let us
+        know. Visit our Help Center for more info or reach out to our support team.</td>
+    </tr>
+
+
+
+    <tr>
+      <td style="line-height: 10px; padding: 0;">&nbsp;</td>
+    </tr>
+
+
+    <tr>
+      <td colspan="4" align="middle"
+        style="padding-top: 10px; border-top: 1px solid #ddd; font-size: 11px; font-weight: 500;">
+        Email : info@booking247.com, Landline: +880 248811861</td>
+    </tr>
+  </tbody>
+</table>

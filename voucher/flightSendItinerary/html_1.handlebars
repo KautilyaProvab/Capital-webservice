@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<div style="background:#ccc; width:100%; padding:40px 0px; position:absolute">
+    <table cellpadding="0" border-collapse="" cellspacing="0" width="100%"
+        style="font-size:10px; font-family: 'Open Sans', sans-serif; width:100%; margin:0px auto;background-color:#fff; padding:20px;border-collapse:separate; color: #000;">
+        <tbody>
+            <tr>
+                <td style="padding:10px 0">
+                    <img style="width:40px;" src="images/6E.gif">
+                </td>
+                <td style="padding:10px 0; line-height:25px;"><span
+                        style="display: block;border-right: 1px solid #999;"><span
+                            style="font-size:14px;">{{operatorName}}</span>
+                        <br><span><img style="vertical-align:middle" src="images/phone.png"><span
+                                style="font-size:16px;color:#000000;vertical-align:middle;font-weight: 600;"> &nbsp;0124
+                                617 3838</span></span>
+                    </span>
+                </td>
+                <td style="padding:10px 0; padding-left: 10%; line-height:25px;"><span
+                        style="font-size:14px;">Agency</span>
+                    <br><span><img style="vertical-align:middle" src="images/phone.png"> <span
+                            style="font-size:16px;color:#000000;vertical-align:middle;font-weight: 600;">
+                            &nbsp;8776786778</span></span>
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="4" style="border:1px solid #000000; padding:0;">
+                    <table cellspacing="0" cellpadding="5" width="100%" style="font-size:12px; padding:0;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" style="background-color:#000000; color:#fff">
+                                    <img style="vertical-align:middle" src="images/flight.png">&nbsp;<span
+                                        style="vertical-align:middle;font-size:13px">Onward Flight Details</span>
+                                </td>
+                                <td align="right" colspan="2" style="background-color:#000000; color:#fff"><span
+                                        style="font-size:10px">*Please verify flight times with the airlines prior to
+                                        departure</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 14px;">
+                                    <span>Flight 1</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 14px;">
+                                    <img style="vertical-align:middle" src="images/flight_up.png">&nbsp;&nbsp;<span
+                                        style="vertical-align:middle">Departing</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 14px;">
+                                    <img style="vertical-align:middle" src="images/flight_down.png">&nbsp;&nbsp;<span
+                                        style="vertical-align:middle">Arriving</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 14px;">
+                                    &nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td><span>{{operatorName}}<br>{{flightNumber}}<br>Cabin: {{cabinClass}}</span>
+                                </td>
+                                <td style="font-size: 15px; line-height: 25px;"><span><strong
+                                            style="color:#2196f3;">{{departingCityName}}</strong><br><span
+                                            style="font-size: 13px; font-weight: 500;">{{departingDateTime}}</span><br></span>
+                                </td>
+                                <td style="font-size: 15px; line-height: 25px;"><span><strong
+                                            style="color:#2196f3;">{{arrivingCityName}}</strong><br><span
+                                            style="font-size: 13px; font-weight: 500;">{{arrivingDateTime}}</span><br></span>
+                                </td>
+                                <td><span
+                                        style="display:block;border-left: 1px solid #999; font-size: 13px; padding-left:10%"><strong>One
+                                            Stop</strong><br>2h 15m <br>Refundable</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="padding:0;">
+                    <table cellspacing="0" cellpadding="5" width="100%" style="font-size:12px; padding:0;">
+                        <tbody>
+                            <tr>
+                                <td width="50%" style="padding:0;padding-right:14px;">
+                                    <table cellspacing="0" cellpadding="5" width="100%"
+                                        style="font-size:14px; line-height:19px; padding:0;border:1px solid #9a9a9a;">
+                                        <tbody>
+                                            <tr style="background: #000;">
+                                                <td style="border-bottom:1px solid #ccc"><span
+                                                        style="font-size:14px; color: #fff;">Payment Details</span>
+                                                </td>
+                                                <td style="border-bottom:1px solid #ccc"><span
+                                                        style="font-size:14px; color: #fff;">Amount ($)</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>Air Fare</span>
+                                                </td>
+                                                <td><span>{{airFare}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>Tax</span>
+                                                </td>
+                                                <td><span>{{tax}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>Markup value</span>
+                                                </td>
+                                                <td><span>{{markup}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>agentCommission</span>
+                                                </td>
+                                                <td><span>{{agentCommission}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>agentTdsOnCommision</span>
+                                                </td>
+                                                <td><span>{{agentTdsOnCommision}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-top:1px solid #ccc"><span
+                                                        style="font-size:15px; font-weight: bold;">Grand Total</span>
+                                                </td>
+                                                <td style="border-top:1px solid #ccc"><span
+                                                        style="font-size:15px; font-weight: bold;">{{grandTotal}}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td width="50%" style="padding:0;padding-left:14px; vertical-align:top">
+                                    <table cellspacing="0" cellpadding="5" width="100%"
+                                        style="border:1px solid #9a9a9a;font-size:14px; padding:0;">
+                                        <tbody>
+                                            <tr style="background: #000;">
+                                                <td colspan="4" style="border-bottom:1px solid #ccc"><span
+                                                        style="font-size:14px; color: #fff;">Flight Inclusions</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"><span><strong>Checkin
+                                                            Baggage:</strong>{{baggage}}<br></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4"><span><strong>Cabin
+                                                            Baggage:</strong>{{checkinBaggage}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4" style="border-top:1px solid #ccc"><span
+                                                        style="font-size:13px; color:#000; line-height:20px;">* Flight
+                                                        inclusions are subject to change with Airlines.</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="line-height:15px;padding:0;">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="padding-bottom:4px"><span
+                        style="font-size:14px; color:#000; font-weight: 900;">Customer Contact Details :</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border-bottom:1px solid #999999;padding-bottom:15px"><span
+                        style="font-size:14px; color:#000; font-weight: 400;"> E-mail :
+                        manigandan.provab@gmail.com</span> <span
+                        style="font-size:14px; color:#000; float: right; font-weight: 400;"> Contact No : +224
+                        8123573796</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4"><span style="line-height:20px; font-size:13px;">Important Information</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border-bottom:1px solid #999999; line-height:20px; font-size:13px; color:#000">
+                    <ul style="padding-bottom:10px; line-height: 28px;">
+                        <li>All Guests, including children and infants, must present valid identification at check-in.
+                        </li>
+                        <li>Check-in begins 2 hours prior to the flight for seat assignment and closes 45 minutes prior
+                            to the scheduled departure.</li>
+                        <li>Carriage and other services provided by the carrier are subject to conditions of carriage,
+                            which are hereby incorporated by reference. These conditions may be obtained from the
+                            issuing carrier.</li>
+                        <li>In case of cancellations less than 6 hours before departure please cancel with the airlines
+                            directly. We are not responsible for any losses if the request is received less than 6 hours
+                            before departure.</li>
+                        <li>Please contact airlines for Terminal Queries.</li>
+                        <li>Free Baggage Allowance: Checked-in Baggage = 15kgs in Economy class.</li>
+                        <li>Changes to the reservation will result in the above fee plus any difference in the fare
+                            between the original fare paid and the fare for the revised booking.</li>
+                        <li>The No Show refund should be collected within 15 days from departure date.</li>
+                        <li>If the basic fare is less than cancellation charges then only statutory taxes would be
+                            refunded.</li>
+                        <li>We are not be responsible for any Flight delay/Cancellation from airline's end.</li>
+                        <li>Kindly contact the airline at least 24 hrs before to reconfirm your flight detail giving
+                            reference of Airline PNR Number.</li>
+                        <li>We are a travel agent and all reservations made through our website are as per the terms and
+                            conditions of the concerned airlines. All modifications,cancellations and refunds of the
+                            airline tickets shall be strictly in accordance with the policy of the concerned airlines
+                            and we disclaim all liability in connection thereof.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right"
+                    style="padding-top:10px; font-weight: 600; line-height: 26px; font-size: 14px;">Zee Business
+                    <br>ContactNo : +1 (805) 209-1307
+                    <br>2905, Lake East Dr Ste 150, Las Vegas, NV 89117
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<html>

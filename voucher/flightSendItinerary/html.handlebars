@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<div style="background:#fff; width:100%; margin: 0px auto; display: table; padding:0px 0px;">
+    <table cellpadding="0" border-collapse="" cellspacing="0" width="100%"
+        style="font-size:10px; font-family: 'Open Sans', sans-serif; width:100%; margin:0px auto;background-color:#fff; padding:30px;border-collapse:separate; color: #000;">
+        <tbody>
+
+            <tr>
+                <td colspan="1" style="padding:10px 0; width:70%">
+                    <img style="width:80px;" src="http://54.198.46.240/nosafer/assets/tlntrip/images/logo.png">
+                </td>
+
+                <!-- td colspan="1" style="text-align: left; width:30%">
+                   <span>Agency: </span><br>
+                   <span>Address: tyerey</span><br>
+                   <span>Phone No: 87454549</span><br>
+                   <span>Email:badrinathnayak@gmail.com</span>
+                </td -->
+                
+               
+            </tr>
+
+            <tr>
+               <td>
+                   <h3 style="margin: 0px;">Flight Quotation</h3>
+                   <span>Please find the flight quotation as per your travel request</span>
+                </td>
+            </tr>   
+
+            <tr><td>&nbsp;</td></tr>
+               <tr>
+               <td>
+                   <h3 style="margin: 0px;">Flight Info</h3>
+                </td>
+            </tr>  
+              
+              <tr><td>&nbsp;</td></tr>
+
+             <tr>
+                 <td colspan="2">
+                     <table style="width: 100%; display:table;">
+                         <tr>
+
+                             <td>
+                               <h4 style="margin: 0px;">Travellers</h4>
+                               <span>{{#if searchData.AdultCount}} {{searchData.AdultCount}} Adult {{/if}} {{#if searchData.ChildCount}} , {{searchData.ChildCount}} Child {{/if}}  {{#if searchData.InfantCount}} , {{searchData.InfantCount}} Infant {{/if}}</span>
+                             </td>
+                             
+
+                             <td>
+                               <h4 style="margin: 0px;">Class</h4>
+                               <span>{{cabinClass}}</span>
+                             </td>
+
+                             <td>
+                               <h4 style="margin: 0px;">Trip Type</h4>
+                               <span>{{searchData.JourneyType}}</span>
+                             </td>
+
+                         </tr>
+                     </table>
+                </td>
+            </tr> 
+            
+             <tr><td>&nbsp;</td></tr>
+
+            
+            {{#each flightInfo}}
+            <tr>
+                <td colspan="5" style="border:1px solid #ddd; padding:0;  border-radius:5px; overflow:hidden;">
+                    <table cellspacing="0" cellpadding="5" width="100%" style="font-size:10px; padding:0;">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" style="background-color:#189AD3; color:#fff">
+                                    <img style="vertical-align:middle; width:10px;" src="images/flight.png">&nbsp;
+                                    {{#each this}}
+                                    <span
+                                        style="vertical-align:middle;font-size:10px; font-weight:600;">{{#if @first}}{{this.Origin.CityName}} ({{this.Origin.AirportCode}}){{/if}}  {{#if @last}}- {{this.Destination.CityName}} ({{this.Destination.AirportCode}}){{/if}}</span>
+                                    {{/each}}
+                                </td>
+                                <td align="right" colspan="3" style="background-color:#189AD3; color:#fff;"><span
+                                        style="font-size:9px">*Please verify flight times with the airlines prior to
+                                        departure</span>
+                                </td>
+                            </tr>
+                            {{#each this}}
+                            <tr>
+
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <span>Airline</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <img style="vertical-align:middle; width:15px;" src="images/flight_up.png">&nbsp;&nbsp;<span
+                                        style="vertical-align:middle">Departing</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <img style="vertical-align:middle; width:15px;" src="images/flight_down.png">&nbsp;&nbsp;<span
+                                        style="vertical-align:middle">Arriving</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    Duration</td>
+
+                                    <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    Baggage</td>
+                            </tr>
+                            <tr>
+                                <td><span>{{this.OperatorName}}<br>{{this.FlightNumber}}<br>Cabin: {{this.CabinClass}}</span>
+                                </td>
+                                <td style="font-size: 10px; vertical-align:top;"><span><strong
+                                            style="color:#000;">{{this.Origin.CityName}}</strong><br><span
+                                            style="font-size: 10px; font-weight: 500;">{{this.Origin.DateTime}}</span><br></span>
+                                </td>
+                                <td style="font-size: 10px; vertical-align:top;"><span><strong
+                                            style="color:#000;">{{this.Destination.CityName}}</strong><br><span
+                                            style="font-size: 10px; font-weight: 500;">{{this.Destination.DateTime}}</span><br></span>
+                                </td>
+                                <td style="vertical-align:top;"><span
+                                        style="display:block; font-size: 10px; padding-left:0%"><strong>
+                                           </strong>{{this.Duration}} <br>{{isRefundable}}</span>
+                                </td>
+                                <td style="vertical-align:top;"><span
+                                        style="display:block; font-size: 10px; padding-left:0%">{{this.Attr.Baggage}}</span>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="line-height:9px;padding:0;">&nbsp;</td>
+            </tr>
+            {{/each}}
+           
+             
+
+             <tr>
+                <td colspan="5" style="border:1px solid #ddd; padding:0;  border-radius:5px; overflow:hidden;">
+                    <table cellspacing="0" cellpadding="5" width="100%" style="font-size:10px; padding:0;">
+                        <tbody>
+                            <tr>
+
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <span>Passengers</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <span
+                                        style="vertical-align:middle">Base Fare</span>
+                                </td>
+                                <td style="background-color:#d9d9d9; color:#000; font-weight: 500; font-size: 10px;">
+                                    <span
+                                        style="vertical-align:middle">Taxes</span>
+                                </td>
+                               
+
+                                    <td style="background-color:#d9d9d9; color:#000; font-weight: 500; text-align:right; font-size: 10px;">
+                                    Total</td>
+                            </tr>
+                            {{#each price}}
+
+                            <tr>
+                                <td><span>{{this.PassengerCount}}</span>
+                                </td>
+
+                                <td style="font-size: 10px; line-height: 17px;"><span>{{this.BasePrice}}</span>
+                                </td>
+
+                                <td style="font-size: 10px; line-height: 17px;"><span>{{this.Tax}}</span>
+                                </td>
+
+                                <td><span
+                                        style="display:block; font-size: 10px; text-align:right;">{{this.TotalPrice}}</span>
+                                </td>
+                              
+                            </tr>
+                            {{/each}}
+
+
+                            <tr style="border-top:1px solid #ddd;">
+
+                                <td style="border-top:1px solid #ddd;" colspan="3"></td>
+
+                                <td style="text-align: right; border-top:1px solid #ddd;">Grand Total &nbsp;&nbsp;&nbsp; {{grandTotal}}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+           
+            
+            
+            {{!-- <tr>
+                <td style="line-height:15px;padding:0;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right"
+                    style="padding-top:10px; font-weight: 600; line-height: 16px; font-size: 10px;">Tlntrip
+                    <br>ContactNo : +880 12345678
+                </td>
+            </tr> --}}
+        </tbody>
+    </table>
+</div>
+
+<html>

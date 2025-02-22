@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     
+<div style="background: #ccc; width: 900px; padding: 40px 0px; position: relative;">
+    <div id="voucher-print">
+        <table id="print_voucher" cellpadding="0" cellspacing="0" width="100%" class="table" style="font-size: 13px; width: 1050px; margin: 0px auto; background-color: #f5f5f5; -webkit-print-color-adjust: exact; padding: 50px 45px; font-family: verdana">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <table style="width: 100%; border-bottom: 2px solid #000000; padding: 10px 10px; background-color: #f5f5f5;">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" style="text-align: left; padding: 10px;"><img src="http://54.198.46.240/b2c/assets/images/logo.png" style="background: #000; width: 60px;"></td>
+                                    <td colspan="2" style="color: #333; line-height: 20px; padding: 10px; text-align: right;">
+                                        <span style="margin: 0px; float: right; font-size: 14px; font-weight: bold; font-size: 14px; border: 1px solid #4169e1; background: #4169e1; padding: 7px 14px; display: block; border-radius: 5px; color: #fff; margin-bottom: 4px;">Booking Ref - CN522841183204</span>
+                                        <p style="margin: 0; font-size: 13px; color: #2196f3; font-weight: bold; clear: both;">Supplier - OK RENT A CAR</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 12px;">
+                <tr>
+                    <td colspan="2" style="padding: 0 0px;">
+                        <h4 style="color: #000; margin: 0px; font-weight: bold; font-size: 16px; padding: 5px 0px;">Car Details</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0px;">
+                        <table style="background: #fff; box-shadow: 0 0 2px 0 rgb(0 0 0 / 8%), 0 2px 8px 0 rgb(0 0 0 / 16%); margin-bottom: 15px; width: 100%; color: #000; font-size: 13px; text-align: left; margin-top: 10px;">
+                            <tr>
+                                <td style="width: 33%;"><img alt="Car Image" style="width: 100%;" src="https://static.carhire-solutions.com/images/car/OKRENTACAR/small/ECMR.jpg"></td>
+                                <td style="width: 67%;">
+                                    <span style="color: #000 !important; font-size: 21px; font-weight: 700; display: block; text-transform: uppercase; margin-top: 12px; display: block;">Seat Ibiza</span><span style="position: relative; top: 2px; padding: 0; font-size: 11px; display: block; margin-bottom: 8px;"><img src="http://54.198.46.240/b2c/assets/images/star_rating_55.png" alt=""></span><span style="color: #767676; display: block; font-size: 14px; margin-right: 2px; padding-top: 5px;">Supplied by: <img alt="" src="https://static.carhire-solutions.comimages/supplier/logo/logo257.png"></span>
+                                    <div style="display: inline-block; margin-top: 6px; margin-bottom: 8px;">
+
+                                        <div  placement="top" tooltip="Passengers" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/user.png" alt="" style="margin-right: 6px;"></span>5</div>
+
+                                        <div placement="top" tooltip="Doors" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/cardoor.png" alt="" style="margin-right: 6px;"></span>2</div>
+
+                                        <div placement="top" tooltip="Bags" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="fas fa-suitcase" style="margin-right: 6px;"></span>2 </div>
+
+                                        <div placement="top" tooltip="This car has air conditioning"  style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor airc"><img style="width: 13px; height: 13px; margin-right: 6px;" src="http://54.198.46.240/b2c/assets/images/carair.png" alt="" style="margin-right: 6px;"></span></div>
+
+                                        <div placement="top" style="font-size: 13px; display: inline-block; margin-bottom: 0; margin-right: 8px;"><span class="cardoor"><img style="width: 13px; height: 13px;" src="http://54.198.46.240/b2c/assets/images/gearboxs.png" alt="" style="margin-right: 6px;"></span></div>
+                                    </div>
+                                    <br>
+                                    <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; font-size: 14px;">
+                                            <span style="color: #000;display: inline-block; font-weight: 700;"><i class="fal fa-tachometer-alt-fast"></i> Mileage: &nbsp;</span> <span> Limited</span></p>
+                                             
+                                    </div>
+                                    <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; font-size: 14px;">
+                                            <span style="color: #000; display: inline-block; font-weight: 700;">
+                                            </span><span> Unspecified </span>
+                                        </p>
+                                        
+                                    </div>
+                                    <div style=" margin-top: 8px; font-size: 14px;">
+                                        <p style="margin-bottom: 0px; font-size: 14px;"><span style="color: #000; display: inline-block;font-weight: 700;"><i class="fal fa-car" style="font-weight: 400; margin-right: 5px;"></i>Supplier Identifier: &nbsp;</span> <span> 5578697</span></p>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 0px;">
+                        <table cellspacing="0" style="background: #fff; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); margin-bottom: 15px; width: 100%; color: #000; font-size: 13px; text-align: left; margin-top: 10px;">
+                            <tbody>
+                                <tr style="margin: 0; color: #fff; background-color: #000; padding: 10px;">
+                                    <th style="padding: 10px 8px; width: 20%;">Pick-up Location</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Pick-up Date/Time</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Drop-Off Location</th>
+                                    <th style="padding: 10px 8px; width: 20%;">Drop-Off Date/Time</th>
+                                </tr>
+                                <tr style="font-size: 14px; line-height: normal;">
+                                    <td style="border-bottom: 1px solid #000; padding: 12px;">
+                                        <p style="margin: 9px 0px;">Calle Muntader n9- El Prat de Llobregat, El Prat de Llobregat, 08820, Spain</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px;">
+                                        <p style="margin: 9px 0px;"> Thursday Apr 15, 2021 17:00:00</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px;">
+                                        <p style="margin: 9px 0px;">Calle Muntader n9- El Prat de Llobregat, El Prat de Llobregat, 08820, Spain</p>
+                                    </td>
+                                    <td style="border-bottom: 1px solid #000; padding: 12px;">
+                                        <p style="margin: 9px 0px;"> Friday Apr 16, 2021 17:00:00</p>
+                                    </td>
+                                </tr>
+                                <tr style="margin: 0; color: #fff; background-color: #000; padding: 10px;">
+                                    <td colspan="4" style="padding: 0px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Booked Date</th>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Trip Type</th>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Status</th>
+                                                <th style="padding: 10px 8px; width: 25%; color: #fff; text-align: left;">Opening hours</th>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr style="font-size: 14px;">
+                                    <td colspan="4" style="padding: 0px;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style=" padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">Jan 27, 2021</p>
+                                                </td>
+                                                <td style="padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">RoundTrip</p>
+                                                </td>
+                                                <td style="padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">BOOKING_CONFIRMED</p>
+                                                </td>
+                                                <td style=" padding: 10px 8px; width: 25%;">
+                                                    <p style="margin: 0px;">Mon - Sun 07:00-22:00</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="border-top: 2px solid #000; padding: 12px; padding-right: 0px; font-size: 14px; line-height: 23px; vertical-align: top;">
+                                        <p style="margin: 0;"><b>Booked by :</b></p>
+                                        <p style="margin: 0;">Ms. Rakshi p,</p>
+                                        <p style="margin: 0;">Bangalore,India</p>
+                                        <p style="margin: 0;">radhadd.provab@gmail.com,</p>
+                                        <p style="margin: 0;">+7026763707</p>
+                                        <p style="margin: 0;"><b>Driver Details :</b></p>
+                                        <p style="margin: 0;">Name :Rakshi p</p>
+                                        <p style="margin: 0;"> Age :36</p>
+                                        <p style="margin: 0;"> License Issued by :Bahamas</p>
+                                        <p style="margin: 0;"> License No :6776879</p>
+                                        <p style="margin: 0;"><b>Flight No/Info : </b>56768</p>
+                                    </td>
+                                    <td colspan="2" style="border-top: 2px solid #000; padding: 12px; padding-right: 70px; font-size: 14px;">
+                                        <p style="text-align: right; margin: 0 0 0px 0;"><b><label style="padding: 0px 0px 0px 0px;">Total Rental Price</label><span style="width: 120px; display: inline-block;">$ 49.00</span></b></p>
+                                        <p style="text-align: right; margin: 0 0 7px 0;"><b><label style="padding: 0px 0px 0px 0px;">Coupon Discount</label><span style="width: 120px; display: inline-block;">$ 0.00</span></b></p>
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; border-top: 1px solid #ccc; font-size: 16px; color: royalblue;"><label style="padding: 0px 0px 0px 0px;">Amount Paid</label><span style="width: 120px; display: inline-block;">$ 49.00</span></b></p>
+                                        <h6 style="text-align: right;">Pay at the Pickup(Due Amount)</h6>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">OnewayFee</label><span style="width: 120px; display: inline-block;">$ 0.00</span></p>
+                                        </span>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">OtherTaxes</label><span style="width: 120px; display: inline-block;">$ 0.00</span></p>
+                                        </span>
+                                        <span>
+                                        </span>
+                                        <span>
+                                            <p style="text-align: right; margin: 3px 0;"><label style="text-align: left; padding: 0 0px 0 0;">YoungDriverAmount</label><span style="width: 120px; display: inline-block;">$ 0.00</span></p>
+                                        </span>
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; border-top: 1px solid #ccc; font-size: 16px; color: royalblue;"><span style="width: 120px; display: inline-block;">$ 0</span></b></p>
+                                        <p style="text-align: right; margin: 13px 0 7px 0;"><b style="padding-top: 5px; font-size: 16px; color: royalblue;"><label style="padding: 0px 0px 0px 0px;">Grand Total</label><span style="width: 120px; display: inline-block;">$ 49</span></b></p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px;  margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Price Inclusions</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov10"> Stay Safe Initiative</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov10"> Stay Safe Initiative </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-times"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov11"> Limited mileage of 300 km/day, maximum 3000 Km per rental, Extra mileage is possible and charged locally at 0,60 €/ KM.</span><span class="pricert">$ 0.73</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov11"> per km: 0.60 EUR </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov12"> Collision damage waiver</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov12"> with excess up to 1,050 EUR </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov13"> Supplementary Liability Insurance</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov13"> Legally required, insurance for damages on the adversarial vehicle, persons and objects- In this offer it is included. </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov14"> Theft protection</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov14"> with excess up to 1,050 EUR </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov15"> Airport Service Charge</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov15"> Some airports charge a service fee- In this offer it is included. </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov16"> Fuel Information</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov16"> Full to Full: Pick up and drop off with a full tank. If the car is not returned with a full tank, suppliers will charge fuel plus refueling charges.  </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-check"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov17"> VAT</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov17"> The rate corresponds with the VAT-rate of the particular country. </div>
+                        </ul>
+                        <ul style="margin-bottom: 4px; padding: 0px;">
+                            <li style="list-style: none;">
+                                <span class="fa fa-times"></span>
+                                <span data-toggle="collapse" data-target="#viewPriceCov18"> Cancellation fee</span><span class="pricert">$ 0.00</span>
+                            </li>
+                            <div class="collapse mn_dis" id="viewPriceCov18">  </div>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; display: block; margin-top: 15px; padding: 10px 15px;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Cancellation Policy</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; display: block; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); color: #555;">
+                        <p style="margin-bottom: 4px;"> $ 0.00 Would be charged between 2021-01-27 10:12:46 To 2021-01-27 10:12:46 </p>
+                        <p style="margin-bottom: 4px;"> $ 49.00 Would be charged between 2021-04-13 17:00:00 To 2021-04-13 17:00:00 </p>
+                        <p style="margin-bottom: 4px;"> $ 49.00 Would be charged between 2021-04-15 17:00:00 To 2021-04-15 17:00:00 </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 0 0px; background-color: #000; -webkit-print-color-adjust: exact; border: 1px solid #fafafa; color: #fff; font-size: 14px; padding: 10px 15px; width: 100%;">
+                        <h4 style="color: #fff; font-weight: bold; margin-bottom: 0px; font-size: 15px; border-bottom: 2px solid #000; text-transform: uppercase;">Terms &amp; Conditions</h4>
+                    </td>
+                </tr>
+                <tr style="box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16); margin-bottom: 15px;">
+                    <td colspan="2" style="color: #000; font-size: 12px; padding: 0 0px; line-height: 20px; font-size: 14px; background: #fff; padding: 15px; color: #555;">
+                        <p style="margin-bottom: 4px;">Guarantee - GUARANTEED FOR 365 DAYS</p>
+                        <p style="margin-bottom: 4px;">General - MUST RETURN TO THE SAME STATE</p>
+                        <p style="margin-bottom: 4px;">General - THE MINIMUM RENTAL PERIOD IS 001 DAYS</p>
+                    </td>
+                </tr>
+                </td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

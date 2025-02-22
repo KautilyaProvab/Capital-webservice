@@ -1,0 +1,122 @@
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP:Body>
+        <air:AirPriceRsp TraceId="" TransactionId="D43773E10A076478F1E03A60C4489339" ResponseTime="2009" xmlns:air="http://www.travelport.com/schema/air_v41_0" xmlns:common_v41_0="http://www.travelport.com/schema/common_v41_0">
+            <common_v41_0:ResponseMessage Code="710401" Type="Warning" ProviderCode="1G">Taxes returned at the FareInfo level are for informational purposes only, and may differ from those returned at the Itinerary/Passenger Type levels.</common_v41_0:ResponseMessage>
+            <common_v41_0:ResponseMessage Code="4033" Type="Warning" ProviderCode="1G">Requested PermittedCabins are ignored during pricing in requested ClassOfService.</common_v41_0:ResponseMessage>
+            <air:AirItinerary>
+                <air:AirSegment Key="YcoFNT4R2BKAFCpjAAAAAA==" Group="0" Carrier="PC" FlightNumber="1182" ProviderCode="1G" Origin="STN" Destination="SAW" DepartureTime="2020-12-02T12:50:00.000+00:00" ArrivalTime="2020-12-02T19:45:00.000+03:00" FlightTime="235" TravelTime="235" Distance="1547" ClassOfService="Q" Equipment="321" ChangeOfPlane="false" OptionalServicesIndicator="false" ParticipantLevel="Secure Sell" AvailabilityDisplayType="Fare Specific Fare Quote Unbooked">
+                    <air:CodeshareInfo OperatingCarrier="PC">PEGASUS HAVA TASIMACILIGI</air:CodeshareInfo>
+                    <air:AirAvailInfo ProviderCode="1G">
+                        <air:BookingCodeInfo BookingCounts="9"/>
+                    </air:AirAvailInfo>
+                    <air:FlightDetails Key="YcoFNT4R2BKAGCpjAAAAAA==" Origin="STN" Destination="SAW" DepartureTime="2020-12-02T12:50:00.000+00:00" ArrivalTime="2020-12-02T19:45:00.000+03:00" FlightTime="235" TravelTime="235" Distance="1547"/>
+                </air:AirSegment>
+                <air:AirSegment Key="YcoFNT4R2BKAHCpjAAAAAA==" Group="0" Carrier="PC" FlightNumber="740" ProviderCode="1G" Origin="SAW" Destination="DXB" DepartureTime="2020-12-02T20:30:00.000+03:00" ArrivalTime="2020-12-03T02:05:00.000+04:00" FlightTime="275" TravelTime="275" Distance="1870" ClassOfService="Q" ChangeOfPlane="false" OptionalServicesIndicator="false" AvailabilityDisplayType="Fare Specific Fare Quote Unbooked">
+                    <air:CodeshareInfo OperatingCarrier="PC">PEGASUS HAVA TASIMACILIGI</air:CodeshareInfo>
+                    <air:FlightDetails Key="YcoFNT4R2BKAICpjAAAAAA==" Origin="SAW" Destination="DXB" DepartureTime="2020-12-02T20:30:00.000+03:00" ArrivalTime="2020-12-03T02:05:00.000+04:00" FlightTime="275" TravelTime="275" Distance="1870"/>
+                </air:AirSegment>
+            </air:AirItinerary>
+            <air:AirPriceResult>
+                <air:AirPricingSolution Key="YcoFNT4R2BKAJCpjAAAAAA==" TotalPrice="INR15283" BasePrice="GBP15.00" ApproximateTotalPrice="INR15283" ApproximateBasePrice="INR1485" EquivalentBasePrice="INR1485" Taxes="INR13798" Fees="INR0" ApproximateTaxes="INR13798" QuoteDate="2020-09-28">
+                    <air:AirSegmentRef Key="YcoFNT4R2BKAFCpjAAAAAA=="/>
+                    <air:AirSegmentRef Key="YcoFNT4R2BKAHCpjAAAAAA=="/>
+                    <air:AirPricingInfo Key="YcoFNT4R2BKALCpjAAAAAA==" TotalPrice="INR15283" BasePrice="GBP15.00" ApproximateTotalPrice="INR15283" ApproximateBasePrice="INR1485" EquivalentBasePrice="INR1485" ApproximateTaxes="INR13798" Taxes="INR13798" LatestTicketingTime="2020-09-28T23:59:00.000+05:30" PricingMethod="Guaranteed" IncludesVAT="false" ETicketability="Yes" PlatingCarrier="PC" ProviderCode="1G">
+                        <air:FareInfo Key="YcoFNT4R2BKATCpjAAAAAA==" FareBasis="QOWBYD1W" PassengerTypeCode="ADT" Origin="STN" Destination="DXB" EffectiveDate="2020-09-28T15:47:00.000+05:30" DepartureDate="2020-12-02" Amount="INR1485" NegotiatedFare="false" NotValidBefore="2020-12-02" NotValidAfter="2020-12-02" TaxAmount="INR13798.00">
+                            <common_v41_0:Endorsement Value="NONEND/PC ONLY"/>
+                            <air:FareRuleKey FareInfoRef="YcoFNT4R2BKATCpjAAAAAA==" ProviderCode="1G">6UUVoSldxwhjDeEQUfpn3MbKj3F8T9EyxsqPcXxP0TLGyo9xfE/RMsuWFfXVd1OAly5qxZ3qLwOXLmrFneovA5cuasWd6i8Dly5qxZ3qLwOXLmrFneovA7dLLuPUIhqZxWa1uaqI55k3aSkvhp2ybYbkpiAj4xlHarlX6CKVpyRN3J3NyYpz6RDKFFZ4V12PQFDb+712lFDsE8x1K6Z2+WLgFn3B9sPdSU8gecfbWEnMU535bvD9TJMscFUjz8UphAevkIpVdc3OXN0QSTGD1UPFc7ZmQhP+mpBH9wehGMENcAPBqbPCNnGa2R7JFPJt/AFKEXb03hK/he9va7VDH7+F729rtUMfv4Xvb2u1Qx+/he9va7VDHxDGJun84l6GmjYuszn207WOnxkQ2WPPHvaVUAnec78/1inYl1JZ1xx5BqgrcyYJEtwXtO9a1rEPNomuuq4tJiU=</air:FareRuleKey>
+                            <air:Brand Key="YcoFNT4R2BKATCpjAAAAAA==" BrandFound="false" UpSellBrandFound="false"/>
+                        </air:FareInfo>
+                        <air:BookingInfo BookingCode="Q" CabinClass="Economy" FareInfoRef="YcoFNT4R2BKATCpjAAAAAA==" SegmentRef="YcoFNT4R2BKAFCpjAAAAAA==" HostTokenRef="YcoFNT4R2BKAKCpjAAAAAA=="/>
+                        <air:BookingInfo BookingCode="Q" CabinClass="Economy" FareInfoRef="YcoFNT4R2BKATCpjAAAAAA==" SegmentRef="YcoFNT4R2BKAHCpjAAAAAA==" HostTokenRef="YcoFNT4R2BKAKCpjAAAAAA=="/>
+                        <air:TaxInfo Category="GB" Amount="INR7895" Key="YcoFNT4R2BKAMCpjAAAAAA=="/>
+                        <air:TaxInfo Category="UB" Amount="INR1347" Key="YcoFNT4R2BKANCpjAAAAAA=="/>
+                        <air:TaxInfo Category="M6" Amount="INR268" Key="YcoFNT4R2BKAOCpjAAAAAA=="/>
+                        <air:TaxInfo Category="TR" Amount="INR446" Key="YcoFNT4R2BKAPCpjAAAAAA=="/>
+                        <air:TaxInfo Category="ZR" Amount="INR102" Key="YcoFNT4R2BKAQCpjAAAAAA=="/>
+                        <air:TaxInfo Category="YQ" Amount="INR2244" Key="YcoFNT4R2BKARCpjAAAAAA=="/>
+                        <air:TaxInfo Category="YR" Amount="INR1496" Key="YcoFNT4R2BKASCpjAAAAAA=="/>
+                        <air:FareCalc>LON PC X/IST PC DXB 19.62QOWBYD1W NUC19.62END ROE0.764174</air:FareCalc>
+                        <air:PassengerType Code="ADT"/>
+                        <air:ChangePenalty>
+                            <air:Amount>INR3738.0</air:Amount>
+                        </air:ChangePenalty>
+                        <air:CancelPenalty>
+                            <air:Percentage>100.00</air:Percentage>
+                        </air:CancelPenalty>
+                        <air:BaggageAllowances>
+                            <air:BaggageAllowanceInfo TravelerType="ADT" Origin="STN" Destination="DXB" Carrier="PC">
+                                <air:URLInfo>
+                                    <air:URL>VIEWTRIP.TRAVELPORT.COM/BAGGAGEPOLICY/PC</air:URL>
+                                </air:URLInfo>
+                                <air:TextInfo>
+                                    <air:Text>20K</air:Text>
+                                    <air:Text>BAGGAGE DISCOUNTS MAY APPLY BASED ON FREQUENT FLYER STATUS/ ONLINE CHECKIN/FORM OF PAYMENT/MILITARY/ETC.</air:Text>
+                                </air:TextInfo>
+                                <air:BagDetails ApplicableBags="1stChecked">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:BagDetails>
+                                <air:BagDetails ApplicableBags="2ndChecked">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:BagDetails>
+                            </air:BaggageAllowanceInfo>
+                            <air:CarryOnAllowanceInfo Origin="STN" Destination="SAW" Carrier="PC">
+                                <air:TextInfo>
+                                    <air:Text>8K</air:Text>
+                                </air:TextInfo>
+                                <air:CarryOnDetails ApplicableCarryOnBags="1">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:CarryOnDetails>
+                                <air:CarryOnDetails ApplicableCarryOnBags="2">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:CarryOnDetails>
+                            </air:CarryOnAllowanceInfo>
+                            <air:CarryOnAllowanceInfo Origin="SAW" Destination="DXB" Carrier="PC">
+                                <air:TextInfo>
+                                    <air:Text>8K</air:Text>
+                                </air:TextInfo>
+                                <air:CarryOnDetails ApplicableCarryOnBags="1">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:CarryOnDetails>
+                                <air:CarryOnDetails ApplicableCarryOnBags="2">
+                                    <air:BaggageRestriction>
+                                        <air:TextInfo>
+                                            <air:Text>CHGS MAY APPLY IF BAGS EXCEED TTL WT ALLOWANCE</air:Text>
+                                        </air:TextInfo>
+                                    </air:BaggageRestriction>
+                                </air:CarryOnDetails>
+                            </air:CarryOnAllowanceInfo>
+                        </air:BaggageAllowances>
+                    </air:AirPricingInfo>
+                    <air:FareNote Key="YcoFNT4R2BKAXCpjAAAAAA==">SUM IDENTIFIED AS UB IS A PASSENGER SERVICE CHARGE</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAYCpjAAAAAA==">RATE USED IN EQU TOTAL IS BSR 1GBP - 98.679892INR</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAZCpjAAAAAA==">LAST DATE TO PURCHASE TICKET: 28SEP20 DEL</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAaCpjAAAAAA==">TICKETING AGENCY 5Y9U</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAbCpjAAAAAA==">DEFAULT PLATING CARRIER PC</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAcCpjAAAAAA==">E-TKT REQUIRED</air:FareNote>
+                    <air:FareNote Key="YcoFNT4R2BKAdCpjAAAAAA==">TICKETING FEES MAY APPLY</air:FareNote>
+                    <common_v41_0:HostToken Key="YcoFNT4R2BKAKCpjAAAAAA==">GFB10101ADT00  01QOWBYD1W                              0200010002#GFB200010101NADTV3022PROM0020000399#GFMCSIP022NPROM PC ADTQOWBYD1W</common_v41_0:HostToken>
+                </air:AirPricingSolution>
+            </air:AirPriceResult>
+        </air:AirPriceRsp>
+    </SOAP:Body>
+</SOAP:Envelope>
