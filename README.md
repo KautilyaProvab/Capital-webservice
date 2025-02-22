@@ -1,1 +1,1 @@
-# booking247-webservice
+# Capitalsky-webservice
