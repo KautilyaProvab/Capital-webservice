@@ -61,4 +61,8 @@ export class RedisServerService {
         const token = crypto.createHash('md5').update(JSON.stringify(searchData) + '_' + randonNumber).digest("hex");
         return token;
     }
+    uniqueId(Token:any,Code:any){
+        const token = crypto.createHash('md5').update(JSON.stringify(Token) + '_' + Code).digest("hex");
+        return token;
+    }
 }
