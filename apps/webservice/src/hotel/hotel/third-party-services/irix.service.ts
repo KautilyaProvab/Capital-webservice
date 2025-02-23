@@ -702,7 +702,6 @@ export class IRIXService extends HotelApi {
             city: paxData["city"],
             postalCode: paxData["postal_code"],
           } as any;
-
           if(paxData["pax_type"] == 'Child'){
             travelDetails = {
               ...travelDetails,
