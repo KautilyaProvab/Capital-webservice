@@ -254,24 +254,6 @@ export class IRIXService extends HotelApi {
       let data = BackData.data;
       let paxCount = Object.values(data.searchRequest.RoomGuests);
 
-      let updatedData = paxCount.map((item: any) => {
-        item.paxCount = item.NoOfAdults + item.NoOfChild;
-        return item;
-      });
-
-      let totalPaxCount = updatedData.reduce(
-        (total, item) => total + item.paxCount,
-        0
-      );
-      let totalAdultCount = updatedData.reduce(
-        (total, item) => total + item.NoOfAdults,
-        0
-      );
-      let totalChildCount = updatedData.reduce(
-        (total, item) => total + item.NoOfChild,
-        0
-      );
-
       let room1 = data.searchRequest.RoomGuests[0];
       let room1_pax = room1.NoOfAdults + "_" + room1.NoOfChild;
       let currencyDetails: any;
@@ -310,6 +292,7 @@ export class IRIXService extends HotelApi {
       let roomsResponse:any
 
       for (let i = 0; i < data.searchRequest.NoOfRooms; i++) {
+        let paxDetails = paxCount[i]
         // Initialize RoomPush for each room index
         let RoomPush = [];
 
@@ -387,9 +370,9 @@ export class IRIXService extends HotelApi {
                   MealPlanCode: RoomData?.boardBasis ?? "",
                   Occupancy: "",
                   CancellationPolicies: {},
-                  PaxCount: totalPaxCount ?? "",
-                  AdultCount: totalAdultCount ?? "",
-                  ChildrenCount: totalChildCount ?? "",
+                  AdultCount: paxDetails['NoOfAdults'] ?? "",
+                  ChildrenCount: paxDetails['NoOfChild'] ?? "",
+                  PaxCount: paxDetails['NoOfAdults'] + paxDetails['NoOfChild'] ?? "",
                   Rooms: "",
                   Supplements: [],
                   Message: "",
@@ -714,12 +697,17 @@ export class IRIXService extends HotelApi {
               fiscalIdentificationNumber: "",
               identityNo: "",
             },
-            birthdate:paxData.date_of_birth,
             address: paxData["address"],
             country: paxData["country"],
             city: paxData["city"],
             postalCode: paxData["postal_code"],
-          };
+          } as any;
+          if(paxData["pax_type"] == 'Child'){
+            travelDetails = {
+              ...travelDetails,
+              BirthDate:paxData.date_of_birth,
+            }
+          }
 
           paxArr.push(travelDetails); // Add the current traveler to paxArr
           k++; // Increment traveler index (assuming each room can have multiple travelers)
