@@ -319,6 +319,12 @@ export class FlightService {
         const source = this.suppliers.find(t => t.name == body['booking_source']);
         return await source['service'].fareQuote(body);
     }
+    async fareBranded(body: any): Promise<any> {
+        // return await this.traveloprtApiService.fareQuote(body);
+        const source = this.suppliers.find(t => t.name == body['booking_source']);
+        return await source['service'].fareBranded(body);
+    }
+
 
     async extraServices(body: any): Promise<any> {
         // return await this.traveloprtApiService.extraServices(body);

@@ -177,418 +177,6 @@ export class SafariTransformService extends FlightApi {
     };
   }
 
-  // async finalData(response: any, body: any, tokenCode: any): Promise<any> {
-  //   const FlightParameters = { FlightList: [] };
-
-  //   const searchData: any = body;
-  //   // Markup and Commission Start
-  //   // const markupAndCommission = await this.flightDbService.markupAndCommissionDetails(searchData);
-  //   //Add Commission Start
-  //   let airlineMarkupAndCommission = {};
-  //   this.airport_codes = await this.getSearchAirports();
-  //   const token = this.redisServerService.geneateResultToken(searchData);
-
-  //   let flight_details = response.Result.SearchResults;
-  //   let flight_req = response.Result.SearchRequest;
-  //   let FlightInfo = {}
-
-  //   const FlightDataList = { JourneyList: [] };
-  //   FlightDataList["JourneyList"][0] = [];
-
-  //   let apiResponse = [];
-  //   let details = [];
-
-  //   let key: number = 0;
-  //   let FlightJourney = { Details: [] };
-  //   for (let f_val of flight_details) {
-  //     if (f_val.ResultType === 1) {
-  //       let result = f_val.Results;
-  //       let cnt = 0;
-  //       for (let [key3, res] of result.entries()) {
-  //         console.log("resCont", cnt++);
-  //         let flightFares = this.forceObjectToArray(res.Fares);
-  //         let legs = this.forceObjectToArray(res.Legs);
-    
-  //         let faresData = flightFares[0];
-  //         let legsData = legs[0].AlternativeLegs[0];
-  //         let alterNativeRef = legsData.alternativeRef;
-  //         let segments = legsData.Segments;
-    
-  //         let total_duration = 0;
-  //         let duration_list = [];
-  //         let airportCache = {};
-  //         let airlineCache = {};
-    
-  //         // Initialize `details` as an array
-  //         let details = [];
-    
-  //         for (let seg of segments) {
-  //           total_duration += Number(seg.FlightDuration);
-    
-  //           let { Code: Equipment } = seg.Equipment || {};
-  //           let { Code: Origin } = seg.DepartureAirport;
-  //           let { Code: Destination } = seg.ArrivalAirport;
-  //           let { Code: Carrier } = seg.OperatingAirline;
-    
-  //           const tempAirportOrigin =
-  //             airportCache[Origin] || (airportCache[Origin] = this.airport_codes.find((t) => t.code === Origin) || {});
-  //           const OriginCityName = tempAirportOrigin.city || Origin;
-  //           const OriginAirportName = tempAirportOrigin.name || Origin;
-    
-  //           const tempAirportDestination =
-  //             airportCache[Destination] ||
-  //             (airportCache[Destination] = this.airport_codes.find((t) => t.code === Destination) || {});
-  //           const DestinationCityName = tempAirportDestination.city || Destination;
-  //           const DestinationAirportName = tempAirportDestination.name || Destination;
-    
-  //           const tempAirline =
-  //             airlineCache[Carrier] || (airlineCache[Carrier] = this.airline_codes.find((t) => t.code == Carrier) || {});
-  //           const OperatorName = tempAirline.name || Carrier;
-    
-  //           const DepartureDate = new Date(seg.Departure);
-  //           const ArrivalDate = new Date(seg.ArrivalDate);
-    
-  //           const DepartureTime = DepartureDate.toTimeString().split(" ")[0];
-  //           const ArrivalTime = ArrivalDate.toTimeString().split(" ")[0];
-    
-  //           // Append the flight detail to the `details` array
-  //           details.push(
-  //             this.formatFlightDetail(
-  //               Origin,
-  //               OriginCityName,
-  //               OriginAirportName,
-  //               DepartureTime,
-  //               "",
-  //               Destination,
-  //               DestinationCityName,
-  //               DestinationAirportName,
-  //               ArrivalTime,
-  //               "",
-  //               Carrier,
-  //               Carrier,
-  //               OperatorName,
-  //               seg.FlightNumber,
-  //               "",
-  //               Carrier,
-  //               Equipment,
-  //               seg.Distance || "",
-  //               seg.FlightDuration,
-  //               "",
-  //               "",
-  //               0,
-  //               seg.WaitingDuration
-  //             )
-  //           );
-    
-  //           // Add duration to the list
-  //           duration_list.push(this.convertToHoursMins(total_duration));
-  //         }
-    
-  //         // Update the FlightJourney details with all the segments
-  //         FlightJourney["Details"][0] = details;
-    
-  //         // Passenger and Price Information
-  //         let { BasePrice, TaxAmount: Taxes, TotalAmount: TotalPrice, ServiceFee: Fees } = faresData.TotalPrice;
-  //         const PaxCount = faresData.PassengerFares.length;
-    
-  //         // Tax Calculation Optimization
-  //         const TaxBreakupDetails = faresData.TotalPrice.TaxList.reduce((acc, t_info) => {
-  //           const taxAmount = this.getPrice(t_info.Amount) * PaxCount;
-  //           acc[t_info.TaxCode] = (acc[t_info.TaxCode] || 0) + taxAmount;
-  //           return acc;
-  //         }, {});
-    
-  //         // Prepare Passenger Breakup
-  //         const PassengerBreakup = {};
-  //         for (let passenger of faresData.PassengerFares) {
-  //           const passengerType = passenger.PassengerType === 1 ? "CHD" : passenger.PassengerType === 2 ? "INF" : "ADT";
-  //           PassengerBreakup[passengerType] = PassengerBreakup[passengerType] || {
-  //             BasePrice,
-  //             Tax: Taxes + Fees,
-  //             TotalPrice: BasePrice + Taxes + Fees,
-  //             PassengerCount: 0,
-  //           };
-  //           PassengerBreakup[passengerType].PassengerCount++;
-  //         }
-    
-  //         // Fetch markup and commission details
-  //         let PriceInfo = await this.flightDbService.formatPriceDetail(
-  //           body.UserId,
-  //           body.UserType,
-  //           "INR",
-  //           TotalPrice,
-  //           BasePrice,
-  //           Taxes,
-  //           0,
-  //           0,
-  //           "",
-  //           this.tax_breakup(TaxBreakupDetails),
-  //           "Regular Fare",
-  //           PassengerBreakup,
-  //           {},
-  //           ""
-  //         );
-    
-  //         let SelectedCurrencyPriceDetails = await this.flightDbService.formatPriceDetailToSelectedCurrency(
-  //           body.Currency,
-  //           PriceInfo
-  //         );
-    
-  //         FlightInfo = {
-  //           FlightDetails: FlightJourney,
-  //           Price: PriceInfo,
-  //           Exchange_Price: SelectedCurrencyPriceDetails,
-  //           Attr: {
-  //             IsRefundable: flightFares[0]["Refundable"] ? 1 : 0,
-  //             AirlineRemark: "",
-  //             DurationList: duration_list,
-  //           },
-  //           ResultToken: await this.redisServerService
-  //             .insert_record(token, JSON.stringify({
-  //               FlightData: { SearchData: body, FlightInfo, Connection: "" },
-  //               ApiData: { token: tokenCode, FlightIds: alterNativeRef }
-  //             }))
-  //             .then((res) => res.access_key),
-  //           booking_source: SAFARI_BOOKING_SOURCE,
-  //         };
-  //         FlightDataList["JourneyList"][0].push(FlightInfo);
-
-  //       }
-  //     }
-  //   }
-    
-    
-    
-  
-  //   let PlusMinus3Calender: any = [];
-  //   let finalResponse = [];
-  //   let finalCalender: any = [];
-  //   let finalFlightList: any = { JourneyList: [] };
-  //   finalFlightList["JourneyList"][0] = [];
-  //   // if (searchData.PlusMinus3Days) {
-  //   //   //Fare calender +-3 days
-  //   //   if (searchData.JourneyType == "Return") {
-  //   //     FlightDataList["JourneyList"][0].forEach((element, FlightKey) => {
-  //   //       let onwardFlight = element.FlightDetails.Details[0][0];
-  //   //       let returnFlight = element.FlightDetails.Details[1][0];
-  //   //       let flightPrice = element.Price;
-  //   //       let departureDatetime = onwardFlight.Origin.DateTime;
-  //   //       let returnDatetime = returnFlight.Origin.DateTime;
-  //   //       let departureDatetimeArray = departureDatetime.split(" ");
-  //   //       let returnDatetimeArray = returnDatetime.split(" ");
-  //   //       if (PlusMinus3Calender[departureDatetimeArray[0]] == undefined) {
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]] = [];
-  //   //       }
-  //   //       if (
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ] == undefined
-  //   //       ) {
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ] = [];
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ] = {
-  //   //           OperatorName: onwardFlight.OperatorName,
-  //   //           OperatorCode: onwardFlight.OperatorCode,
-  //   //           FlightNumber: onwardFlight.FlightNumber,
-  //   //           TotalDisplayFare: Number(flightPrice.TotalDisplayFare),
-  //   //           Currency: flightPrice.Currency,
-  //   //           OnwardFlightDate: departureDatetimeArray[0],
-  //   //           ReturnFlightDate: returnDatetimeArray[0],
-  //   //           SearchData: {
-  //   //             AdultCount: searchData.AdultCount,
-  //   //             ChildCount: searchData.ChildCount,
-  //   //             InfantCount: searchData.InfantCount,
-  //   //             JourneyType: searchData.JourneyType,
-  //   //             PreferredAirlineName: searchData.PreferredAirlineName,
-  //   //             PreferredAirlines: searchData.PreferredAirlines,
-  //   //             NonStopFlights: searchData.NonStopFlights,
-  //   //             PlusMinus3Days: searchData.PlusMinus3Days,
-  //   //             Segments: [
-  //   //               {
-  //   //                 CabinClassOnward: searchData.Segments[0].CabinClassOnward,
-  //   //                 CabinClassReturn: searchData.Segments[0].CabinClassReturn,
-  //   //                 DepartureDate: departureDatetimeArray[0] + "T00:00:00",
-  //   //                 ReturnDate: returnDatetimeArray[0] + "T00:00:00",
-  //   //                 Destination: searchData.Segments[0].Destination,
-  //   //                 Origin: searchData.Segments[0].Origin,
-  //   //               },
-  //   //             ],
-  //   //             UserType: searchData.UserType,
-  //   //             UserId: searchData.UserId,
-  //   //             booking_source: SAFARI_BOOKING_SOURCE,
-  //   //             Currency: searchData.Currency,
-  //   //           },
-  //   //         };
-  //   //       } else if (
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ].TotalDisplayFare > Number(flightPrice.TotalDisplayFare)
-  //   //       ) {
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ] = [];
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]][
-  //   //           returnDatetimeArray[0]
-  //   //         ] = {
-  //   //           OperatorName: onwardFlight.OperatorName,
-  //   //           OperatorCode: onwardFlight.OperatorCode,
-  //   //           FlightNumber: onwardFlight.FlightNumber,
-  //   //           TotalDisplayFare: Number(flightPrice.TotalDisplayFare),
-  //   //           Currency: flightPrice.Currency,
-  //   //           OnwardFlightDate: departureDatetimeArray[0],
-  //   //           ReturnFlightDate: returnDatetimeArray[0],
-  //   //           SearchData: {
-  //   //             AdultCount: searchData.AdultCount,
-  //   //             ChildCount: searchData.ChildCount,
-  //   //             InfantCount: searchData.InfantCount,
-  //   //             JourneyType: searchData.JourneyType,
-  //   //             PreferredAirlineName: searchData.PreferredAirlineName,
-  //   //             PreferredAirlines: searchData.PreferredAirlines,
-  //   //             NonStopFlights: searchData.NonStopFlights,
-  //   //             PlusMinus3Days: searchData.PlusMinus3Days,
-  //   //             Segments: [
-  //   //               {
-  //   //                 CabinClassOnward: searchData.Segments[0].CabinClassOnward,
-  //   //                 CabinClassReturn: searchData.Segments[0].CabinClassReturn,
-  //   //                 DepartureDate: departureDatetimeArray[0] + "T00:00:00",
-  //   //                 ReturnDate: returnDatetimeArray[0] + "T00:00:00",
-  //   //                 Destination: searchData.Segments[0].Destination,
-  //   //                 Origin: searchData.Segments[0].Origin,
-  //   //               },
-  //   //             ],
-  //   //             UserType: searchData.UserType,
-  //   //             UserId: searchData.UserId,
-  //   //             booking_source: SAFARI_BOOKING_SOURCE,
-  //   //             Currency: searchData.Currency,
-  //   //           },
-  //   //         };
-  //   //       }
-
-  //   //       let fromDate = departureDatetimeArray[0] + "T00:00:00";
-  //   //       let toDate = returnDatetimeArray[0] + "T00:00:00";
-
-  //   //       if (
-  //   //         searchData.Segments[0].DepartureDate == fromDate &&
-  //   //         searchData.Segments[0].ReturnDate == toDate
-  //   //       ) {
-  //   //         finalFlightList["JourneyList"][0].push(element);
-  //   //       }
-  //   //     });
-  //   //     PlusMinus3Calender = Object.values(PlusMinus3Calender);
-  //   //     PlusMinus3Calender.forEach(
-  //   //       (particularDayFlight, particularDayFlightKey) => {
-  //   //         finalCalender[particularDayFlightKey] = Object.values(
-  //   //           particularDayFlight
-  //   //         );
-  //   //       }
-  //   //     );
-  //   //   } else {
-  //   //     FlightDataList["JourneyList"][0].forEach((element) => {
-  //   //       let onwardFlight = element.FlightDetails.Details[0][0];
-
-  //   //       let flightPrice = element.Price;
-  //   //       let departureDatetime = onwardFlight.Origin.DateTime;
-
-  //   //       let departureDatetimeArray = departureDatetime.split(" ");
-
-  //   //       if (PlusMinus3Calender[departureDatetimeArray[0]] == undefined) {
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]] = [];
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]] = {
-  //   //           OperatorName: onwardFlight.OperatorName,
-  //   //           OperatorCode: onwardFlight.OperatorCode,
-  //   //           FlightNumber: onwardFlight.FlightNumber,
-  //   //           TotalDisplayFare: Number(flightPrice.TotalDisplayFare),
-  //   //           Currency: flightPrice.Currency,
-  //   //           FlightDate: departureDatetimeArray[0],
-  //   //           SearchData: {
-  //   //             AdultCount: searchData.AdultCount,
-  //   //             ChildCount: searchData.ChildCount,
-  //   //             InfantCount: searchData.InfantCount,
-  //   //             JourneyType: searchData.JourneyType,
-  //   //             PreferredAirlineName: searchData.PreferredAirlineName,
-  //   //             PreferredAirlines: searchData.PreferredAirlines,
-  //   //             NonStopFlights: searchData.NonStopFlights,
-  //   //             PlusMinus3Days: searchData.PlusMinus3Days,
-  //   //             Segments: [
-  //   //               {
-  //   //                 CabinClass: searchData.Segments[0].CabinClass,
-  //   //                 DepartureDate: departureDatetimeArray[0] + "T00:00:00",
-  //   //                 Destination: searchData.Segments[0].Destination,
-  //   //                 Origin: searchData.Segments[0].Origin,
-  //   //               },
-  //   //             ],
-  //   //             UserType: searchData.UserType,
-  //   //             UserId: searchData.UserId,
-  //   //             booking_source: SAFARI_BOOKING_SOURCE,
-  //   //             Currency: searchData.Currency,
-  //   //           },
-  //   //         };
-  //   //       } else if (
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]].TotalDisplayFare >
-  //   //         Number(flightPrice.TotalDisplayFare)
-  //   //       ) {
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]] = [];
-  //   //         PlusMinus3Calender[departureDatetimeArray[0]] = {
-  //   //           OperatorName: onwardFlight.OperatorName,
-  //   //           OperatorCode: onwardFlight.OperatorCode,
-  //   //           FlightNumber: onwardFlight.FlightNumber,
-  //   //           TotalDisplayFare: Number(flightPrice.TotalDisplayFare),
-  //   //           Currency: flightPrice.Currency,
-  //   //           FlightDate: departureDatetimeArray[0],
-  //   //           SearchData: {
-  //   //             AdultCount: searchData.AdultCount,
-  //   //             ChildCount: searchData.ChildCount,
-  //   //             InfantCount: searchData.InfantCount,
-  //   //             JourneyType: searchData.JourneyType,
-  //   //             PreferredAirlineName: searchData.PreferredAirlineName,
-  //   //             PreferredAirlines: searchData.PreferredAirlines,
-  //   //             NonStopFlights: searchData.NonStopFlights,
-  //   //             PlusMinus3Days: searchData.PlusMinus3Days,
-  //   //             Segments: [
-  //   //               {
-  //   //                 CabinClass: searchData.Segments[0].CabinClass,
-  //   //                 DepartureDate: departureDatetimeArray[0] + "T00:00:00",
-  //   //                 Destination: searchData.Segments[0].Destination,
-  //   //                 Origin: searchData.Segments[0].Origin,
-  //   //               },
-  //   //             ],
-  //   //             UserType: searchData.UserType,
-  //   //             UserId: searchData.UserId,
-  //   //             booking_source: SAFARI_BOOKING_SOURCE,
-  //   //             Currency: searchData.Currency,
-  //   //           },
-  //   //         };
-  //   //       }
-  //   //       let fromDate = departureDatetimeArray[0] + "T00:00:00";
-
-  //   //       if (searchData.Segments[0].DepartureDate == fromDate) {
-  //   //         finalFlightList["JourneyList"][0].push(element);
-  //   //       }
-  //   //     });
-  //   //     finalCalender = Object.values(PlusMinus3Calender);
-  //   //   }
-  //   //   finalResponse[0] = finalFlightList["JourneyList"][0];
-
-  //   //   finalResponse["CalenderList"] = finalCalender;
-  //   // } else {
-      
-  //   // }
-  //   finalResponse[0] = FlightDataList["JourneyList"][0];
-  //   finalResponse["CalenderList"] = [];
-  //   if (this.isLogXml) {
-  //         const fs = require("fs");
-         
-  //         fs.writeFileSync(
-  //           `${logStoragePath}/flights/safari/SearchForm_RS.json`,
-  //           JSON.stringify(finalResponse)
-  //         );
-  //       }
-
-  //   return finalResponse;
-  // }
   async finalData(response: any, body: any, tokenCode: any): Promise<any> {
     const FlightDataList = { JourneyList: [[]] }; // Initialize JourneyList[0] as an empty array
     const searchData: any = body;
@@ -782,5 +370,71 @@ export class SafariTransformService extends FlightApi {
       }
     }
     return return_tax_list;
+  }
+
+  async fareBranded(fares: any, body: any, tokenCode: any,ResultToken:any): Promise<any> {
+    const { BaseAmount, TaxAmount: TaxAmount, TotalAmount: TotalAmount, ServiceFee: ServiceFee } = fares.TotalPrice;
+    const PaxCount = fares.PassengerFares.length;
+    const TaxBreakupDetails = fares.TotalPrice.TaxList.reduce((acc, t_info) => {
+      const taxAmount = this.getPrice(t_info.Amount) * PaxCount;
+      acc[t_info.TaxCode] = (acc[t_info.TaxCode] || 0) + taxAmount;
+      return acc;
+    }, {});
+    let title = fares.Title
+    const PassengerBreakup = {};
+    fares.PassengerFares.forEach((passenger) => {
+      const passengerType = passenger.PassengerType === 1 ? "CHD" : passenger.PassengerType === 2 ? "INF" : "ADT";
+      PassengerBreakup[passengerType] = PassengerBreakup[passengerType] || {
+        BaseAmount,
+        Tax: TaxAmount + ServiceFee,
+        TotalPrice: TotalAmount,
+        PassengerCount: 0,
+      };
+      PassengerBreakup[passengerType].PassengerCount++;
+    });
+
+    // Format price details
+    const PriceInfo = await this.flightDbService.formatPriceDetail(
+      body.UserId,
+      body.UserType,
+      "INR",
+      TotalAmount,
+      BaseAmount,
+      TaxAmount,
+      0,
+      0,
+      "",
+      this.tax_breakup(TaxBreakupDetails),
+      title,
+      PassengerBreakup,
+      {},
+      ""
+    );
+
+    // Convert price details to selected currency
+    const SelectedCurrencyPriceDetails = await this.flightDbService.formatPriceDetailToSelectedCurrency(body.Currency, PriceInfo);
+    const token = this.redisServerService.geneateResultToken(body);
+
+    return {
+      Price: PriceInfo,
+      Exchange_Price: SelectedCurrencyPriceDetails,
+      Attr: {
+        IsRefundable: fares.Refundable ? 1 : 0,
+        
+      },
+      
+      ResultToken: await this.redisServerService.insert_record(
+        token,
+        JSON.stringify({
+          FlightData: {FlightDataIndex:ResultToken, SearchData: body, PriceInfo: PriceInfo, Connection: "" },
+          ApiData: { token: tokenCode, FlightIds: fares.FareAlternativeLegs[0].Key },
+        })
+      ).then((res) => res.access_key),
+      booking_source: SAFARI_BOOKING_SOURCE,
+    };
+
+    
+
+
   }
 }
