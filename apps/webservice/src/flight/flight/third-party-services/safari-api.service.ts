@@ -886,45 +886,7 @@ export class SafariService extends FlightApi {
         
           
           // if (PassengerTypeArray["ADT"]) {
-          //     AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][0]['PassengerType'] = PassengerTypeArray["ADT"];
-          // }
-          // if (PassengerTypeArray["CNN"]) {
-          //     if (PassengerTypeArray["INF"]) {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][2]['PassengerType'] = PassengerTypeArray["CNN"];
-          //     } else {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["CNN"];
-          //     }
-          // }
-          // if (PassengerTypeArray["INF"]) {
-          //     if (PassengerTypeArray["CNN"]) {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["INF"];
-          //     } else {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["INF"];
-          //     }
-          // }
-
-                // for (let i = 0; i < AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'].length; i++) {
-          //     const passengerTypeCode = AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"]["Code"];
-          //     if (passengerTypeCode === "CNN") {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"] = PassengerTypeArray["CNN"][CNNIndex];
-          //         CNNIndex++;
-          //     } else if (passengerTypeCode === "INF") {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"] = PassengerTypeArray["INF"][INFIndex];
-          //         INFIndex++;
-          //     }
-          // }
-          
-         
-
-      // if (!result) {
-      //     message = 'Booking Failed!';
-      // } else {
-
-      //     // let param = {};
-      //     // param['AppReference'] = body['AppReference'];
-      //     // result = await this.pnrRetrieve(param);
-      // }
-      // return { result, message };
+       
   }
 
   formatDate(dateStr) {
