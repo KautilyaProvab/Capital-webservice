@@ -1,10 +1,14 @@
 import { Body, Injectable, Req } from "@nestjs/common";
 import { getExceptionClassByCode } from "../../all-exception.filter";
 import { BaseApi } from "../../base.api";
+import { v4 as uuidv4 } from 'uuid';
+import { RedisServerService } from "../../shared/redis-server.service";
 
 @Injectable()
 export class UserTravellerService extends BaseApi {
-  constructor() {
+  constructor(
+    private redisServerService: RedisServerService,
+  ) {
     super();
   }
 
@@ -153,4 +157,30 @@ export class UserTravellerService extends BaseApi {
       throw new errorClass(error.message);
     }
   }
+
+  async getWallet(body:any,req:any):Promise<any>{
+    try {
+        let userId = req.user.id
+        let walletType = body['Wallet']
+        const query = `SELECT * FROM b2c_users WHERE auth_user_id = ${userId}`;
+        const res_data = await this.manager.query(query);
+        const emcode = `SELECT em_code FROM emulator WHERE currency = "${walletType}"`;
+        const em_codeResponse = await this.manager.query(emcode)
+        let depositBalance ='';
+        if(walletType == 'IQD'){
+            depositBalance = res_data[0].IQD_balance
+        }else if(walletType == 'USD'){
+            depositBalance = res_data[0].balance
+        }
+        // let exchangeRate = await this.currencyMgmt.CurrencyConvertor('USD',walletType,depositBalance)
+        let response = {
+          'WalletCurrency':walletType,
+          'WalletAmount':depositBalance,
+          'EmullatorCode':em_codeResponse[0].em_code,
+      } 
+        return response;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
 }

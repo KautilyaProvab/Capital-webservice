@@ -33,7 +33,7 @@ async function bootstrap() {
   app.use(compression());
   app.useGlobalFilters(new AllExceptionsFilter(new HttpService()));
   swaggerDefinition(app);
-  await app.listen(4017);
+  await app.listen(4012);
 
   if (module.hot) {
     module.hot.accept();

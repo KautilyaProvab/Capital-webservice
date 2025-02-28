@@ -646,7 +646,10 @@ export class IRIXService extends HotelApi {
             JSON.stringify(response)
           );
         }
-    } else {
+    } else if(ApiData.paymentMethods.prepaid){
+      payment = ApiData.paymentMethods.prepaid.code;
+    }
+    else {
       payment = "credit";
     }
     let RoomDetails = RedisParse.HotelData.RoomDetails;
@@ -720,6 +723,15 @@ export class IRIXService extends HotelApi {
         travelers: paxArr, // Add the travelers for this room
       };
     }
+    let paymentMethod
+    if (payment === "paynow"){
+      paymentMethod = {
+        order : {
+          id : paymentId,
+          token : paymentToken
+        }
+      }
+    }
 
     const reservation_url = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${offerId}/book?token=${BackData.api_token}`;
     let request = {
@@ -729,10 +741,7 @@ export class IRIXService extends HotelApi {
       rooms: Pax,
       payment: {
         method: payment,
-        order:{
-          id:paymentId,
-          token:paymentToken
-        }
+        ...paymentMethod
       },
       backOfficeRemarks: [
         {

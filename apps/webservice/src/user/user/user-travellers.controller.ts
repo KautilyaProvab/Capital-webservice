@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Res } from "@nestjs/common";
+import { Controller, Post, Body, UseGuards, Req, Res, Get } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AddUserTravellerDto, DeleteUserTravellerDto, UpdateUserTravellerDto, UserTravellerListDto } from "./swagger/user-travellers.dto";
 
@@ -60,5 +60,11 @@ export class UserTravellersController {
       req
     );
     return result;
+  }
+
+  @Get('getWallet')
+  @UseGuards(AuthGuard('jwt'))
+  async getWallet(@Body() body: any, @Req() req: any): Promise<any> {
+      return await this.userTravellellersService.getWallet(body, req);
   }
 }
