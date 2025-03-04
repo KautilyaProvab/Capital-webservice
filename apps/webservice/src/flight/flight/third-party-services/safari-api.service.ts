@@ -782,7 +782,6 @@ export class SafariService extends FlightApi {
               paxType = '2'
               }
               if(flightBookingTransactionPassengers[px] == 'Male'){
-
                 paxGender = '0' 
               }else if(flightBookingTransactionPassengers[px] == 'Female'){
                 paxGender = '1'
@@ -813,8 +812,36 @@ export class SafariService extends FlightApi {
           }else if(flightBookingTransactionPassengers[0] == 'Female'){
             paxGender = '1'
           }
+                paxGender = '0' 
+              }else if(flightBookingTransactionPassengers[px] == 'Female'){
+                paxGender = '1'
+              }
 
+            pxDetails[px] ={
+              "FlightPaxType":paxType,
+                    "Pax": {
+                      "DateOfBirth": this.formatDate(flightBookingTransactionPassengers[px].date_of_birth),
+                      "Email": flightBookings[0].email,
+                      "FirstName": flightBookingTransactionPassengers[px].first_name,
+                      "GenderType": paxGender,
+                      "LastName": flightBookingTransactionPassengers[px].last_name,
+                      "MobilePhone": "string",
+                      "NationalityCode": flightBookingTransactionPassengers[px].passenger_nationality,
+                      "IdentityNumber": ""
+                    }
 
+            }
+
+          }
+
+          let paxGender=''
+
+          if(flightBookingTransactionPassengers[0] == 'Male'){
+
+            paxGender = '0' 
+          }else if(flightBookingTransactionPassengers[0] == 'Female'){
+            paxGender = '1'
+          }
           let request = {
             "request": {
               "TokenCode": commitBookingDataParsed['ApiData']['token'],
@@ -882,49 +909,6 @@ export class SafariService extends FlightApi {
               JSON.stringify(response)
             );
           }
-
-        
-          
-          // if (PassengerTypeArray["ADT"]) {
-          //     AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][0]['PassengerType'] = PassengerTypeArray["ADT"];
-          // }
-          // if (PassengerTypeArray["CNN"]) {
-          //     if (PassengerTypeArray["INF"]) {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][2]['PassengerType'] = PassengerTypeArray["CNN"];
-          //     } else {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["CNN"];
-          //     }
-          // }
-          // if (PassengerTypeArray["INF"]) {
-          //     if (PassengerTypeArray["CNN"]) {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["INF"];
-          //     } else {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][1]['PassengerType'] = PassengerTypeArray["INF"];
-          //     }
-          // }
-
-                // for (let i = 0; i < AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'].length; i++) {
-          //     const passengerTypeCode = AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"]["Code"];
-          //     if (passengerTypeCode === "CNN") {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"] = PassengerTypeArray["CNN"][CNNIndex];
-          //         CNNIndex++;
-          //     } else if (passengerTypeCode === "INF") {
-          //         AirPricingSolutionTemp['AirPricingSolution']['AirPricingInfo'][i]["PassengerType"] = PassengerTypeArray["INF"][INFIndex];
-          //         INFIndex++;
-          //     }
-          // }
-          
-         
-
-      // if (!result) {
-      //     message = 'Booking Failed!';
-      // } else {
-
-      //     // let param = {};
-      //     // param['AppReference'] = body['AppReference'];
-      //     // result = await this.pnrRetrieve(param);
-      // }
-      // return { result, message };
   }
 
   formatDate(dateStr) {
@@ -935,8 +919,6 @@ export class SafariService extends FlightApi {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
     const year = date.getFullYear();
-  
-    // Return the date in the desired format: DD/MM/YYYY
     return `${day}/${month}/${year}`;
   }
 
