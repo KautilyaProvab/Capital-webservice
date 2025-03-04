@@ -782,7 +782,6 @@ export class SafariService extends FlightApi {
               paxType = '2'
               }
               if(flightBookingTransactionPassengers[px] == 'Male'){
-
                 paxGender = '0' 
               }else if(flightBookingTransactionPassengers[px] == 'Female'){
                 paxGender = '1'
@@ -813,8 +812,36 @@ export class SafariService extends FlightApi {
           }else if(flightBookingTransactionPassengers[0] == 'Female'){
             paxGender = '1'
           }
+                paxGender = '0' 
+              }else if(flightBookingTransactionPassengers[px] == 'Female'){
+                paxGender = '1'
+              }
 
+            pxDetails[px] ={
+              "FlightPaxType":paxType,
+                    "Pax": {
+                      "DateOfBirth": this.formatDate(flightBookingTransactionPassengers[px].date_of_birth),
+                      "Email": flightBookings[0].email,
+                      "FirstName": flightBookingTransactionPassengers[px].first_name,
+                      "GenderType": paxGender,
+                      "LastName": flightBookingTransactionPassengers[px].last_name,
+                      "MobilePhone": "string",
+                      "NationalityCode": flightBookingTransactionPassengers[px].passenger_nationality,
+                      "IdentityNumber": ""
+                    }
 
+            }
+
+          }
+
+          let paxGender=''
+
+          if(flightBookingTransactionPassengers[0] == 'Male'){
+
+            paxGender = '0' 
+          }else if(flightBookingTransactionPassengers[0] == 'Female'){
+            paxGender = '1'
+          }
           let request = {
             "request": {
               "TokenCode": commitBookingDataParsed['ApiData']['token'],
@@ -882,11 +909,6 @@ export class SafariService extends FlightApi {
               JSON.stringify(response)
             );
           }
-
-        
-          
-          // if (PassengerTypeArray["ADT"]) {
-       
   }
 
   formatDate(dateStr) {
@@ -897,8 +919,6 @@ export class SafariService extends FlightApi {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
     const year = date.getFullYear();
-  
-    // Return the date in the desired format: DD/MM/YYYY
     return `${day}/${month}/${year}`;
   }
 
