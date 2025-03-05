@@ -509,53 +509,12 @@ export class HotelDbService extends HotelApi {
     let stuba_currency_conversion = 1
      let currencyDetails;
      let  OrginalCancelationPolicy  = ''
-  
-
-
-    // body.parsedInfo.RoomDetails
-    // if (hotelBody.searchRequest.booking_source == STUBA_HOTEL_BOOKING_SOURCE) {
-    //   if(!Array.isArray(body.BookingPrepareResult.Booking.HotelBooking)){
-    //     body.BookingPrepareResult.Booking.HotelBooking = [body.BookingPrepareResult.Booking.HotelBooking]
-    //   }
-    //   body.BookingPrepareResult.Booking.HotelBooking.forEach((roomprice)=>{
-    //     // console.log(parseFloat(roomprice.TotalSellingPrice.amt)   , '==========>>>>>>>>>>>>>>>>///');
-    //     // StubaRoomPrice  += parseFloat(roomprice.TotalSellingPrice.amt)    
-            
-    //   })
-
-    //     if (body.BookingPrepareResult['Currency']['$t'] !== BASE_CURRENCY  && body.BookingPrepareResult['Currency']['$t']  !== hotelBody.searchRequest.Currency  )  {
-    //       currencyDetails = await this.formatPriceDetailToSelectedCurrency(body.BookingPrepareResult.Currency['$t']);
-    //       stuba_currency_conversion = currencyDetails?.value ?? 1;
-    //       totalPrice = totalPrice / stuba_currency_conversion;
-    //   }    
-    // } 
-
-    
      if (hotelBody.searchRequest.booking_source == HUMMING_BIRD_BOOKING_SOURCE || hotelBody.searchRequest.booking_source  == STUBA_HOTEL_BOOKING_SOURCE || hotelBody.searchRequest.booking_source == DOTW_HOTEL_BOOKING_SOURCE){
       totalPrice += parseFloat(body.parsedInfo?.Price?.Amount);
     }else {
       totalPrice += roomData.price;
     }
-    // let markup
 
-    // if(hotelBody.searchRequest.booking_source == STUBA_HOTEL_BOOKING_SOURCE){ 
-    //   // if (hotelBody.searchRequest.Currency !== BASE_CURRENCY &&  body.BookingPrepareResult.Currency['$t']  !== hotelBody.searchRequest.Currency) { 
-    //   //   currencyDetails = await this.formatPriceDetailToSelectedCurrency(hotelBody.searchRequest.Currency);
-    //   //   conversionRate = currencyDetails['value'] ?? 1;
-    //   //   totalPrice = totalPrice * conversionRate
-    //   // }
-    //   markup = await this.getMarkup(hotelBody.searchRequest)
-    //   let markupDetails = await this.markupDetails(markup, totalPrice);
-    //   if (hotelBody.searchRequest.UserType == "B2B"){
-    //        totalPrice = (totalPrice + markupDetails.AdminMarkup + markupDetails.AgentMarkup ).toFixed(2) ;
-    
-    //   }else if (hotelBody.searchRequest.UserType == "B2C"){
-    //     totalPrice = parseFloat(markupDetails.AdminMarkup);
-    //     totalPrice = Number((totalPrice + markupDetails.AdminMarkup ).toFixed(2))
-    //   }
-    // }
-
-    
      if (roomData.currency && roomData.currency != BASE_CURRENCY) {
       currencyDetails = await this.formatPriceDetailToSelectedCurrency(roomData.currency);
       conversionRate = currencyDetails['value'] ?? 1;
@@ -587,17 +546,6 @@ export class HotelDbService extends HotelApi {
     if (promoCode.length > 0 && body.BookingSource === "B2C") {
       firstPromo = promoCode[0];
       if (firstPromo.discount_type === "percentage") {
-        // let totalPrice: any;
-        // if (data.Price.Currency != "GBP") {
-        //     totalPrice = parseFloat((data?.Price?.TotalDisplayFare/data.exchangeRate).toFixed(2))
-        // }
-
-        // discountAmount = parseFloat(((firstPromo.discount_value / 100) * totalPrice).toFixed(2));
-
-        // if (data.Price.Currency != "GBP") {
-        //     discountAmount = parseFloat((discountAmount *data.exchangeRate).toFixed(2))
-        // }
-        // data.Price.TotalDisplayFare -= discountAmount;
 
         discountAmount = parseFloat(((firstPromo.discount_value / 100) * totalPrice).toFixed(2));
 
@@ -1715,18 +1663,12 @@ export class HotelDbService extends HotelApi {
     RoomsData.forEach((room) => {
       let rooms = {};
       console.log("fff-",room.Price);
-      if (
-        data.booking_source === HUMMING_BIRD_BOOKING_SOURCE ||
-        data.booking_source === STUBA_HOTEL_BOOKING_SOURCE ||
-        data.booking_source === DOTW_HOTEL_BOOKING_SOURCE
-      ) {
-        room.Price["Amount"] = room.Price[0].Amount;
-      }
+      
 
       rooms = {
         roomId: room.Id,
         room_count: room.Rooms,
-        roomName: room.Description.replace(/'/g, " "),
+        roomName: room.Description[0],
         checkin: data.CheckIn,
         checkout: data.CheckOut,
         currency: room.Price["Currency"]

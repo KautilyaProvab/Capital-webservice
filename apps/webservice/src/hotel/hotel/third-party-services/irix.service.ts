@@ -175,31 +175,8 @@ export class IRIXService extends HotelApi {
         const duplicatHotelListData = await this.redisServerService.read_list(
           DeDuToken
         );
-
-        //                 const duplicatHotelList= JSON.parse(duplicatHotelListData);
-        //                 let finalHotelList:any = [];
-        //                 for (let index = 0; index < formattedResult.length; index++) {
-        //                     // console.log("ten-",formattedResult[index].GiataCode);return;
-        //                     if(formattedResult[index] != undefined){
-
-        //                     formattedResult[index]['uniqueHotelId']=duplicatHotelList.uniqueHotelId++;
-        //                     duplicatHotelList[formattedResult[index]['GiataCode']].price = formattedResult[index]['Price']['Amount'];
-        //                     duplicatHotelList[formattedResult[index]['GiataCode']].uniqueHotelId = formattedResult[index]['uniqueHotelId'];
-        //                     finalHotelList.push(formattedResult[index]);
-        //                 }
-        //                    }
-
-        //                    const DeToken = this.redisServerService.geneateResultToken(body.searchId);
-
-        // const duplicatHotelListNew = await this.redisServerService.insert_record(DeToken, JSON.stringify(duplicatHotelList));
-
-        // finalHotelList['DeDuToken'] = duplicatHotelListNew["access_key"];
-        // return finalHotelList;
         return formattedResult;
-      } else {
-        // const errorClass: any = getExceptionClassByCode(`400 ${result.Message}`);
-        // throw new errorClass(`400 ${result.Message}`);
-      }
+      } 
     } catch (error) {
       const errorClass: any = getExceptionClassByCode(error.message);
       throw new errorClass(error.message);
@@ -246,246 +223,278 @@ export class IRIXService extends HotelApi {
     return request;
   }
 
-  async getHotelDetails(body) {
+  async getHotelDetails(body){
     try {
-      let BackData = await this.redisServerService.read_list(body.ResultToken);
-      BackData = JSON.parse(BackData);
-      let token = BackData.data["ResultToken"];
-      let data = BackData.data;
-      let paxCount = Object.values(data.searchRequest.RoomGuests);
-
-      let updatedData = paxCount.map((item: any) => {
-        item.paxCount = item.NoOfAdults + item.NoOfChild;
-        return item;
-      });
-
-      let totalPaxCount = updatedData.reduce(
-        (total, item) => total + item.paxCount,
-        0
-      );
-      let totalAdultCount = updatedData.reduce(
-        (total, item) => total + item.NoOfAdults,
-        0
-      );
-      let totalChildCount = updatedData.reduce(
-        (total, item) => total + item.NoOfChild,
-        0
-      );
-
-      let room1 = data.searchRequest.RoomGuests[0];
-      let room1_pax = room1.NoOfAdults + "_" + room1.NoOfChild;
-      let currencyDetails: any;
-      let conversionRate = 1;
-      const headers = await this.getHeader(
-        "HOTEL_SEARCH_REQUEST",
-        "Request",
-        body["UserType"]
-      );
-
-      const givenUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/details?token=${BackData.api_token}`;
-
-      const response: any = await this.httpService
-        .get(givenUrl, { headers })
-        .toPromise();
-
-      const fs = require("fs");
-
-      if (this.isLogXml) {
-        fs.writeFileSync(
-          `${logStoragePath}/hotels/Irix/HotelDetailsRES_${data.searchRequest.searchId}.json`,
-          JSON.stringify(response)
-        );
-      }
-
-      const offersUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers?token=${BackData.api_token}`;
-      const offersResponse: any = await this.httpService
-        .get(offersUrl, { headers })
-        .toPromise();
-
-      const offers: any = Object.values(offersResponse.offers);
-
-      let roomDetails: any[] = [];
-      let Rooms: any;
-      let UID: any;
-      let roomsResponse:any
-
-      for (let i = 0; i < data.searchRequest.NoOfRooms; i++) {
-        // Initialize RoomPush for each room index
-        let RoomPush = [];
-
-        // Loop through all the offers
-        for (let j = 0; j < offers.length; j++) {
-          const offer = offers[j];
-          let offerId = offer.id;
-
-          // Loop through all packages in the current offer
-          for (let index = 0; index < offer.packages.length; index++) {
-            let packages = offer.packages[index];
-            let packageCode = packages.packageCode;
-            let packageToken = packages.packageToken;
-            let packageRoom = packages.packageRooms[i]; // Get room data for the specific room index
-
-            // Loop through all room references in the package
-            for (const packRoom of packageRoom.roomReferences) {
-              let room = packRoom;
-
-              if (room?.selected === true) {
-                // Generate unique UID for each room (moved here to ensure unique UID for each room)
-                let UID = await this.redisServerService.uniqueId(
-                  packageCode,
-                  packageCode
-                );
-
-                // Generate room-specific data
-                let roomCode = room.roomCode;
-                let roomtoken = room.roomToken;
-                let RoomData = offers[j].rooms[room.roomCode];
-                let price = RoomData?.price;
-                let NonRefundable = RoomData?.nonRefundable
-                  ? "NonRefundable"
-                  : "Refundable";
-
-                  const roomsUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${offerId}/rooms/${RoomData.index}?token=${BackData.api_token}`;
-                  roomsResponse = await this.httpService
-                    .get(roomsUrl, { headers })
-                    .toPromise();
-
-
-                // Generate unique result token for this specific room's reference
-                let rkey = await this.redisServerService.geneateResultToken(
-                  body
-                );
-                let rRedis = {
-                  roomCode: roomCode,
-                  roomToken: roomtoken,
-                };
-
-                let rkeyResponse = await this.redisServerService.insert_record(
-                  rkey,
-                  JSON.stringify(rRedis)
-                );
-                
-
-                // Define room data for this specific room
-                let roomsData = {
-                  Index: rkeyResponse["access_key"] ?? "",
-                  Price: {
-                    FromDate: data.searchRequest.CheckIn,
-                    ToDate: data.searchRequest.CheckOut,
-                    Amount: price?.selling?.value,
-                    hotelTaxCharge: 0,
-                    Currency: price?.selling?.currency,
-                    EligibleDiscount: 0,
-                    Markup: 0,
-                  },
-                  Id: offerId,
-                  Description: RoomData?.name ?? "",
-                  RoomType: RoomData?.board ?? "",
-                  RoomName: RoomData?.name ?? "",
-                  NonRefundable: NonRefundable ?? "",
-                  NonRefundStatus: RoomData?.nonRefundable ?? "",
-                  MealPlanCode: RoomData?.boardBasis ?? "",
-                  Occupancy: "",
-                  CancellationPolicies: {},
-                  PaxCount: totalPaxCount ?? "",
-                  AdultCount: totalAdultCount ?? "",
-                  ChildrenCount: totalChildCount ?? "",
-                  Rooms: "",
-                  Supplements: [],
-                  Message: "",
-                  AvailableRooms: "",
-                  mealsAmount: "",
-                  basePrice: price?.selling?.value ?? "",
-                  hotelTaxPlusValue: 0,
-                  roomImages:roomsResponse?.images ??  [],
-                  hotelTax: [],
-                  hotelAmenities:[roomsResponse?.facilitiesDescription] ?? []
-                };
-
-                // Save result for this specific room and package
-                let resultIndRedis = {
-                  offerId: offerId,
-                  packCode: packageCode,
-                  packToken: packageToken,
-                  RoomData: [roomsData],
-                };
-
-                // Generate unique result index token for this specific package and offer
-                let resultInd = await this.redisServerService.geneateResultToken(
-                  body
-                );
-
-                let resultResponse = await this.redisServerService.insert_record(
-                  resultInd,
-                  JSON.stringify(resultIndRedis)
-                );
-
-                // Structure for storing room details
-                let Rooms = {
-                  AgencyToken: "",
-                  ResultIndex: resultResponse["access_key"],
-                  RoomUniqueId: UID, // Each room gets its own unique UID
-                  Rooms: [roomsData],
-                };
-
-                // Push this room data into RoomPush array for the specific room index (i)
-                RoomPush.push(Rooms);
-              }
-            }
+        let BackData = await this.redisServerService.read_list(body.ResultToken);
+        BackData = JSON.parse(BackData);
+        let token = BackData.data["ResultToken"];
+        let data = BackData.data;
+        let paxCount = Object.values(data.searchRequest.RoomGuests);
+        let updatedData = paxCount.map((item: any) => {
+            item.paxCount = item.NoOfAdults + item.NoOfChild;
+            return item;
+          });
+    
+          let totalPaxCount = updatedData.reduce(
+            (total, item) => total + item.paxCount,
+            0
+          );
+          let totalAdultCount = updatedData.reduce(
+            (total, item) => total + item.NoOfAdults,
+            0
+          );
+          let totalChildCount = updatedData.reduce(
+            (total, item) => total + item.NoOfChild,
+            0
+          );
+          let room1 = data.searchRequest.RoomGuests[0];
+          let room1_pax = room1.NoOfAdults + "_" + room1.NoOfChild;
+          let currencyDetails: any;
+          let conversionRate = 1;
+          const headers = await this.getHeader(
+            "HOTEL_SEARCH_REQUEST",
+            "Request",
+            body["UserType"]
+          );
+    
+          const givenUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/details?token=${BackData.api_token}`;
+    
+          const response: any = await this.httpService
+            .get(givenUrl, { headers })
+            .toPromise();
+    
+          const fs = require("fs");
+          if (this.isLogXml) {
+            fs.writeFileSync(
+              `${logStoragePath}/hotels/Irix/HotelDetailsRES_${data.searchRequest.searchId}.json`,
+              JSON.stringify(response)
+            );
           }
+    
+          const offersUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers?token=${BackData.api_token}`;
+          const offersResponse: any = await this.httpService
+            .get(offersUrl, { headers })
+            .toPromise();
+    
+          const offers: any = Object.values(offersResponse.offers);
+          let roomDetails: any[] = [];
+          let Rooms: any;
+          let UID: any;
+          let roomsResponse: any;
+          for (let i = 0; i < data.searchRequest.NoOfRooms; i++) {
+            // Initialize RoomPush for each room index
+            let RoomPush = [];
+    
+          // Loop through all the offers
+          for (let j = 0; j < offers.length; j++) {
+            const offer = offers[j];
+            let offerId = offer.id;
+    
+            let RoomPush = [];
+            let redisRmpsh = [];
+    
+            // Loop through all packages in the current offer
+            for (let index = 0; index < offer.packages.length; index++) {
+              let packages = offer.packages[index];
+              let packageCode = packages.packageCode;
+              let packageToken = packages.packageToken;
+              let rmCode = [];
+              let rmToken = [];
+              let rmPrice = 0;
+              let currency = "";
+              let rmName = [];
+              let rmDescription = [];
+              let rmBoard = [];
+              let rmRefund = [];
+              for (let i = 0; i < data.searchRequest.NoOfRooms; i++) {
+                let packageRoom = packages.packageRooms[i]; // Get room data for the specific room index
+    
+                // Loop through all room references in the package
+                for (const packRoom of packageRoom.roomReferences) {
+                  let room = packRoom;
+    
+                  if (room?.selected === true) {
+                    // Generate unique UID for each room (moved here to ensure unique UID for each room)
+                    // let UID = await this.redisServerService.uniqueId(
+                    //   packageCode,
+                    //   packageCode
+                    // );
+    
+                    // Generate room-specific data
+                    let roomCode = room.roomCode;
+                    let roomtoken = room.roomToken;
+                    let RoomData = offers[j].rooms[room.roomCode];
+                    let rmname = RoomData.name;
+    
+                    rmPrice += RoomData?.price.selling.value;
+                    currency = RoomData?.price.selling.currency;
+    
+                    let NonRefundable =
+                      RoomData?.nonRefundable == false ? false : true;
+    
+                    const roomsUrl = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${offerId}/rooms/${RoomData.index}?token=${BackData.api_token}`;
+                    roomsResponse = await this.httpService
+                      .get(roomsUrl, { headers })
+                      .toPromise();
+    
+                    // Generate unique result token for this specific room's reference
+    
+                    rmCode.push(roomCode);
+                    rmToken.push(roomtoken);
+                    rmName.push(rmname);
+                    rmDescription.push(RoomData.info);
+                    rmBoard.push(RoomData.boardBasis);
+                    rmRefund.push(NonRefundable);
+                    // Push this room data into RoomPush array for the specific room index (i)
+                  }
+                }
+              }
+              let rkey = await this.redisServerService.geneateResultToken(body);
+              let rRedis = {
+                roomCode: rmCode,
+                roomToken: rmToken,
+              };
+    
+              
+              // Define room data for this specific room
+              let roomsData = {
+              
+                PackageCode: packageCode,
+                PackageToken: packageToken,
+                roomCode: rmCode,
+                roomToken: rmToken,
+                Price: {
+                  FromDate: data.searchRequest.CheckIn,
+                  ToDate: data.searchRequest.CheckOut,
+                  Amount: rmPrice,
+                  hotelTaxCharge: 0,
+                  Currency: currency,
+                  EligibleDiscount: 0,
+                  Markup: 0,
+                },
+                Id: offerId,
+                Description: rmDescription,
+                RoomType: rmBoard,
+                RoomName: rmName,
+                NonRefundable: rmRefund,
+                // NonRefundStatus: RoomData?.nonRefundable ?? "",
+                // MealPlanCode: RoomData?.boardBasis ?? "",
+                Occupancy: totalPaxCount ?? 0,
+                CancellationPolicies: {},
+                PaxCount: totalPaxCount
+                  ? `${data.searchRequest.NoOfRooms}~${totalAdultCount}~${totalChildCount}`
+                  : 0,
+                AdultCount: totalAdultCount ?? 0,
+                ChildrenCount: totalChildCount ?? 0,
+                Rooms: data.searchRequest.NoOfRooms ?? 0,
+                Supplements: [],
+                Message: "",
+                AvailableRooms: "",
+                mealsAmount: "",
+                basePrice: rmPrice,
+                hotelTaxPlusValue: 0,
+                roomImages: roomsResponse?.images ?? [],
+                hotelTax: [],
+                hotelAmenities: [roomsResponse?.facilitiesDescription] ?? [],
+              };
+    
+              let rkeyResponse = await this.redisServerService.insert_record(
+                rkey,
+                JSON.stringify(roomsData)
+              );
+    
+              let roomsDaata = {
+                Index: rkeyResponse["access_key"] ?? "",
+                ...roomsData
+              }
+
+              // Save result for this specific room and package
+              delete roomsDaata.PackageCode;
+              delete roomsDaata.PackageToken;
+              delete roomsDaata.roomCode;
+              delete roomsDaata.roomToken;
+    
+              RoomPush.push(roomsDaata);
+            }
+    
+            let resultIndRedis = {
+              offerId: offerId,
+              RoomData: RoomPush,
+            };
+    
+            // Generate unique result index token for this specific package and offer
+            let resultInd = await this.redisServerService.geneateResultToken(body);
+    
+            let resultResponse = await this.redisServerService.insert_record(
+              resultInd,
+              JSON.stringify(resultIndRedis)
+            );
+    
+            // Structure for storing room details
+            Rooms = {
+              AgencyToken: "",
+              // ResultIndex: resultResponse["access_key"],
+              RoomUniqueId: UID, // Each room gets its own unique UID
+              Rooms: RoomPush,
+            };
+    
+            let Roomdata = this.forceObjectToArray(Rooms)
+            roomDetails.push(Roomdata);
+          }
+    
+          if (this.isLogXml) {
+            fs.writeFileSync(
+              `${logStoragePath}/hotels/Irix/Offers_RS_${data.searchRequest.searchId}.json`,
+              JSON.stringify(offersResponse)
+            );
+          }
+          if (this.isLogXml) {
+            fs.writeFileSync(
+              `${logStoragePath}/hotels/Irix/Rooms_RS_${data.searchRequest.searchId}.json`,
+              JSON.stringify(roomsResponse)
+            );
+          }
+          let minPrice = offers[0].minPrice
+          let Data = {
+            HotelName: response.name,
+            HotelCategoty: response.stars,
+            StarRating: response.stars,
+            HotelAddress: response.address,
+            MainImage: response?.mainImage?.url ?? "",
+            HotelImage: [response?.mainImage?.url] ?? [],
+            HotelDescription: response?.shortDescription ?? "",
+            Price:{
+              Amount:minPrice.value,
+              Currency:minPrice.currency,
+            },
+            HotelPromotion: "",
+            HotelPolicy: [],
+            RoomDetails: roomDetails,
+            HotelContactNo: response?.telephone ?? "N/A",
+            Latitude: response?.geolocation?.latitude ?? "",
+            Longitude: response?.geolocation?.longitude ?? "",
+            Breakfast: "",
+            HotelLocation: response?.city?.name ?? "",
+            SuppliersPrice: "",
+            searchRequest : BackData.data.searchRequest ?? ""
+          };
+    
+          token = this.redisServerService.geneateResultToken(body);
+          let saveData = {};
+          saveData["HotelData"] = Data;
+          saveData["BackData"] = BackData;
+          let resp = await this.redisServerService.insert_record(
+            token,
+            JSON.stringify(saveData)
+          );
+    
+          return {
+            ...Data,
+            ResultIndex: resp["access_key"],
+          };
         }
-
-        // Store the collected RoomPush data into roomDetails[i] after finishing the nested loops for each room index
-        roomDetails[i] = RoomPush;
-      }
-
-      if (this.isLogXml) {
-        fs.writeFileSync(
-          `${logStoragePath}/hotels/Irix/Offers_RS_${data.searchRequest.searchId}.json`,
-          JSON.stringify(offersResponse)
-        );
-      }
-      if (this.isLogXml) {
-        fs.writeFileSync(
-          `${logStoragePath}/hotels/Irix/Rooms_RS_${data.searchRequest.searchId}.json`,
-          JSON.stringify(roomsResponse)
-        );
-      }
-
-      let Data = {
-        HotelName: response.name,
-        HotelCategoty: response.stars,
-        StarRating: response.stars,
-        HotelAddress: response.address,
-        MainImage: response?.mainImage?.url ?? "",
-        HotelImage: [response?.mainImage?.url] ?? [],
-        HotelDescription: response?.shortDescription ?? "",
-        HotelPromotion: "",
-        HotelPolicy: [],
-        RoomDetails: roomDetails,
-        HotelContactNo: response?.telephone ?? "N/A",
-        Latitude: response?.geolocation?.latitude ?? "",
-        Longitude: response?.geolocation?.longitude ?? "",
-        Breakfast: "",
-        HotelLocation: response?.city?.name ?? "",
-        SuppliersPrice: "",
-      };
-
-      token = this.redisServerService.geneateResultToken(body);
-      let saveData = {};
-      saveData["HotelData"] = Data;
-      saveData["BackData"] = BackData;
-      let resp = await this.redisServerService.insert_record(
-        token,
-        JSON.stringify(saveData)
-      );
-
-      return {
-        ...Data,
-        ResultIndex: resp["access_key"],
-      };
     } catch (error) {
-      throw new Error("An error occurred while retrieving hotel details.");
+        throw new Error("An error occurred while retrieving hotel details.");
     }
   }
 
@@ -509,24 +518,16 @@ export class IRIXService extends HotelApi {
       let roomTokens = [];
       let RoomDetails = [];
       let RoomDetail = [];
+      RoomData = await this.redisServerService.read_list(
+        body.RoomResultToken
+      );
+      RoomData = JSON.parse(RoomData);
 
-      for (let i = 0; i < body.RoomResultToken.length; i++) {
-        RoomData = await this.redisServerService.read_list(
-          body.RoomResultToken[i]
-        );
-        RoomData = JSON.parse(RoomData);
-        let RoomIndexData = await this.redisServerService.read_list(
-          RoomData.RoomData[0].Index
-        );
-        let RoomIndex = JSON.parse(RoomIndexData);
-        roomTokens.push(RoomIndex.roomToken);
-        RoomDetail.push(RoomData.RoomData[0]);
-      }
       let request = {
-        packageToken: RoomData.packToken,
-        roomTokens: roomTokens,
+        packageToken: RoomData.PackageToken,
+        roomTokens: RoomData.roomToken,
       };
-      const availability = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${RoomData.offerId}/availability?token=${BackData.api_token}`;
+      const availability = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${RoomData.Id}/availability?token=${BackData.api_token}`;
       const response: any = await this.httpService
         .post(availability, request, { headers })
         .toPromise();
@@ -542,6 +543,16 @@ export class IRIXService extends HotelApi {
           JSON.stringify(response)
         );
       }
+
+      delete RoomData.PackageCode;
+      delete RoomData.PackageToken;
+      delete RoomData.roomCode;
+      delete RoomData.roomToken;
+
+      let RoomsData = {
+        Index:body.RoomResultToken,
+        ...RoomData
+      }
       let hotelData = {
         ResultIndex: "",
         HotelName: HotelData?.HotelName ?? "",
@@ -552,7 +563,7 @@ export class IRIXService extends HotelApi {
         HotelDescription: HotelData?.HotelDescription ?? "",
         HotelPromotion: HotelData?.HotelPromotion ?? "",
         HotelPolicy: HotelData?.HotelPolicy ?? [],
-        price: BackData?.data?.Price ?? "",
+        Price: BackData?.data?.Price ?? "",
         HotelPicture: [],
         HotelContactNo: BackData?.data?.PhoneNumber ?? "",
         HotelMap: "",
@@ -560,7 +571,7 @@ export class IRIXService extends HotelApi {
         Longitude: HotelData?.Longitude ?? "",
         Breakfast: "",
         HotelLocation: HotelData?.HotelLocation ?? "",
-        RoomDetails: RoomDetail,
+        RoomDetails: [RoomsData],
         SupplierPrice: "",
         searchRequest: BackData?.data?.searchRequest ?? {},
         booking_source: BackData?.data?.searchRequest?.booking_source ?? "",
@@ -573,7 +584,7 @@ export class IRIXService extends HotelApi {
         trip_adv_url: "",
         trip_rating: "",
         NoOfRoomsAvailableAtThisPrice: "",
-        Refundable: RoomData.RoomData[0].NonRefundStatus,
+        Refundable: RoomsData.NonRefundable[0],
         HotelCurrencyCode: BackData.data.Price.Currency ?? "",
         NoOfReviews: "",
         ReviewScore: "",
@@ -619,13 +630,12 @@ export class IRIXService extends HotelApi {
     let offerId = RedisParse.HotelData.RoomDetails[0].Id;
     const fs = require("fs");
 
-    let passengerData =pax
-
+    let passengerData = pax;
 
     let payment = "";
     let provider = "";
     let paymentToken = "";
-    let paymentId:any;
+    let paymentId: any;
     if (ApiData.paymentMethods.paynow) {
       payment = ApiData.paymentMethods.paynow.code;
       provider = ApiData.paymentMethods.paynow.options[0].provider;
@@ -642,28 +652,31 @@ export class IRIXService extends HotelApi {
         provider: provider,
         paymentToken: paymentToken,
         params: {
-          successUrl : "http://www.example.com/success",
-          failureUrl : "http://www.example.com/failure",
-          notificationUrl : "http://www.example.com/notification"
+          successUrl: "http://www.example.com/success",
+          failureUrl: "http://www.example.com/failure",
+          notificationUrl: "http://www.example.com/notification",
         },
       };
       const payment_url = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${offerId}/payment?token=${BackData.api_token}`;
 
       const response: any = await this.httpService
-        .post(payment_url, request , { headers })
+        .post(payment_url, request, { headers })
         .toPromise();
-       paymentId = Number(response.id);
-        if (this.isLogXml) {
-          fs.writeFileSync(
-            `${logStoragePath}/hotels/Irix/Payment_RQ_${searchData.searchId}.json`,
-            JSON.stringify(request)
-          );
-          fs.writeFileSync(
-            `${logStoragePath}/hotels/Irix/Payment_RS_${searchData.searchId}.json`,
-            JSON.stringify(response)
-          );
-        }
-    } else {
+      paymentId = Number(response.id);
+      if (this.isLogXml) {
+        fs.writeFileSync(
+          `${logStoragePath}/hotels/Irix/Payment_RQ_${searchData.searchId}.json`,
+          JSON.stringify(request)
+        );
+        fs.writeFileSync(
+          `${logStoragePath}/hotels/Irix/Payment_RS_${searchData.searchId}.json`,
+          JSON.stringify(response)
+        );
+      }
+    } else if(ApiData.paymentMethods.prepaid){
+      payment = ApiData.paymentMethods.prepaid.code
+    }
+    else {
       payment = "credit";
     }
     let RoomDetails = RedisParse.HotelData.RoomDetails;
@@ -721,16 +734,24 @@ export class IRIXService extends HotelApi {
             postalCode: paxData["postal_code"],
           };
 
-          paxArr.push(travelDetails); // Add the current traveler to paxArr
-          k++; // Increment traveler index (assuming each room can have multiple travelers)
+          paxArr.push(travelDetails); 
+          k++; 
         }
       }
 
-      // After processing all passengers for this room, assign the room details
       Pax[j] = {
-        packageRoomToken: roomToken, // You can update this if needed
-        travelers: paxArr, // Add the travelers for this room
+        packageRoomToken: roomToken[j], 
+        travelers: paxArr,
       };
+    }
+    let paymentMethod
+    if (payment === "paynow"){
+      paymentMethod = {
+        order : {
+          id : paymentId,
+          token : paymentToken
+        }
+      }
     }
 
     const reservation_url = `${IXRIX_URL}search/results/${BackData.srk}/hotels/${BackData.data.HotelCode}/offers/${offerId}/book?token=${BackData.api_token}`;
@@ -741,10 +762,7 @@ export class IRIXService extends HotelApi {
       rooms: Pax,
       payment: {
         method: payment,
-        order:{
-          id:paymentId,
-          token:paymentToken
-        }
+        ...paymentMethod
       },
       backOfficeRemarks: [
         {
@@ -765,30 +783,32 @@ export class IRIXService extends HotelApi {
         `${logStoragePath}/hotels/Irix/Book_res_${searchData.searchId}.json`,
         JSON.stringify(response)
       );
-      let ApiResponse = {}
-      if(response.status == 'OK'){
+      let ApiResponse = {};
+      if (response.status == "OK") {
         ApiResponse = {
-          BookingStatus:"BOOKING_CONFIRMED",
-          reference:response.reference.external,
-          totalSellingRate:response?.price?.selling?.value ?? "",
-          currency:response?.price?.selling?.currency ?? ""
-
-        }
-
-      }else{
+          BookingStatus: "BOOKING_CONFIRMED",
+          reference: response.reference.external,
+          totalSellingRate: response?.price?.selling?.value ?? "",
+          currency: response?.price?.selling?.currency ?? "",
+        };
+      } else {
         ApiResponse = {
-          BookingStatus:"BOOKING_FAILED",
-          ClientReference:'',
-          totalSellingRate:response?.price?.selling?.value ?? 0,
-          currency:response?.price?.selling?.currency ?? 'USD'
-        }
-        
+          BookingStatus: "BOOKING_FAILED",
+          ClientReference: "",
+          totalSellingRate: response?.price?.selling?.value ?? 0,
+          currency: response?.price?.selling?.currency ?? "USD",
+        };
       }
-      return this.IRIXTransformService.updateData(ApiResponse,body, booking ,passengerData,room);
-
-      
+      return this.IRIXTransformService.updateData(
+        ApiResponse,
+        body,
+        booking,
+        passengerData,
+        room
+      );
     }
   }
+
   async hotelsReservation(body: any): Promise<any> {
     let RedisData: any = await this.redisServerService.read_list(
       body.ResultToken
@@ -809,251 +829,6 @@ export class IRIXService extends HotelApi {
     );
 
     return formattedRequest;
-  }
-  
-  //insert cities
-  async insertCities(body: any) {
-    try {
-
-      const filepath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/Cities.xml`;
-      const xmlData = fs.readFileSync(filepath, 'utf-8');
-      const parser = new xml2js.Parser();
-      const parsedData = await parser.parseStringPromise(xmlData);
-  
-      let cities = parsedData.CityStaticData.City;
-  
-      const values = cities.map((el: any) => {
-        const city_id = el.$.ID ?? "";
-        const country_id = el.$.CountryID ?? "";
-        const name = el.$.Name ?? "";
-        const code = el.$.Code ?? "";
-        const searchable = el.$.Searchable ?? ""; 
-        const searchableOn = el.$.SearchableOn ?? "";
-  
-        const escapedName = name.replace(/'/g, "''");
-        const escapedCode = code.replace(/'/g, "''");
-        const escapedSearchableOn = searchableOn.replace(/'/g, "''");
-        const escapedSearchable = searchable.replace(/'/g, "''"); 
-  
-        return `(${city_id}, ${country_id}, '${escapedName}', '${escapedCode}', '${escapedSearchable}', '${escapedSearchableOn}')`;
-      }).join(",");
-  
-      const query = `INSERT INTO cities (city_id, country_id, name, code, Searchable, SearchableOn) VALUES ${values}`;
-  
-      const result = await this.manager.query(query);
-  
-      if (result) {
-        console.log("Cities inserted successfully");
-      }
-  
-    } catch (error) {
-      console.error("Error inserting cities:", error);
-    }
-  }
-
-  //insert countries
-  async insertCountries(body: any) {
-    try {
-
-      const filepath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/Countries.xml`;
-      const xmlData = fs.readFileSync(filepath, 'utf-8');
-      const parser = new xml2js.Parser();
-      const parsedData = await parser.parseStringPromise(xmlData);
-
-      let countries = parsedData.CountryStaticData.Country;
-  
-      const values = countries.map((el: any) => {
-        const country_id = el.$.ID ?? "";
-        const name = el.$.Name ?? "";
-        const ISO = el.$.ISO ?? "";
-        const searchable = el.$.Searchable ?? ""; 
-        const searchableOn = el.$.SearchableOn ?? "";
-  
-        const escapedName = name.replace(/'/g, "''");
-        const escapedCode = ISO.replace(/'/g, "''");
-        const escapedSearchableOn = searchableOn.replace(/'/g, "''");
-        const escapedSearchable = searchable.replace(/'/g, "''"); 
-  
-        return `(${country_id}, '${escapedName}', '${escapedCode}', '${escapedSearchable}', '${escapedSearchableOn}')`;
-      }).join(",");
-  
-      const query = `INSERT INTO countries(country_id, name, ISO, Searchable, SearchableOn) VALUES ${values}`;
-  
-      const result = await this.manager.query(query);
-  
-      if (result) {
-        console.log("Cities inserted successfully");
-      }
-  
-    } catch (error) {
-      console.error("Error inserting cities:", error);
-    }
-  }
-
-  async insertHotelDetails(body: any) {
-    try {
-      const folderPath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/HotelDetails/`;
-      const files = fs.readdirSync(folderPath); 
-      const parser = new xml2js.Parser();
-      
-      // Loop through each XML file
-      for (const file of files) {
-
-        let fileName
-        const filePath = `${folderPath}${file}`; 
-        const xmlData = fs.readFileSync(filePath, 'utf-8');
-        const parsedData = await parser.parseStringPromise(xmlData);
-  
-        let hotelDetails = parsedData.HotelDetailsStaticData?.HotelDetails ?? [];
-  
-        if (hotelDetails && hotelDetails.length > 0) {
-          const values = hotelDetails.map((el: any) => {
-            const city_id = el?.$?.CityID ?? "";
-            const country_id = el?.$?.CountryID ?? "";
-            const id = el?.$?.ID ?? "";
-            const hotelname = el?.$?.Name?.replace(/'/g, "''") ?? "";
-            const searchable = el?.$?.Searchable ?? ""; 
-            const stars = el?.$?.Stars ?? "";
-            const type = el?.$?.Type ?? "";
-            const address = el?.Address?.[0] ?? 'NULL';  // Fallback to 'NULL' if Address is missing
-            const gallery = el?.Gallery && el?.Gallery[0]?.GalleryImage ? JSON.stringify(el.Gallery[0].GalleryImage.map((item: any) => item.$.URL)) : 'NULL';  // Handle missing Gallery
-            const image = el?.Image?.[0]?.$?.URL ? `'${el.Image[0].$.URL.replace(/'/g, "''")}'` : 'NULL';  // Handle missing Image
-            const Latitude = el?.Position?.[0]?.$.Latitude ?? 'NULL';  // Handle missing Position (Latitude)
-            const Longitude = el?.Position?.[0]?.$.Longitude ?? 'NULL';  // Handle missing Position (Longitude)
-            // const Location = el?.Location?.[0] ?? 'NULL';  
-            const Location = el?.Location?.[0]?.replace(/'/g, "''") ?? 'NULL';
-            const translations = el?.Translations?.[0] ?? 'NULL';  // Handle missing Translations
-            const contact = el?.Contact?.[0]?.Fax ? `'${el.Contact[0].Fax[0]}'` : (el?.Contact?.[0]?.Email ? `'${el.Contact[0].Email[0]}'` : 'NULL');
-            const escapedHotelName = hotelname.replace(/'/g, "''");
-            const escapedAddress = address.replace(/'/g, "''");
-            const escapedTranslations = translations.replace(/'/g, "''");
-            const escapedSearchable = searchable.replace(/'/g, "''"); 
-            const escapedType = type.replace(/'/g, "''"); 
-            const escapedGallery = gallery !== 'NULL' ? `'${gallery.replace(/'/g, "''")}'` : 'NULL';  
-            const fileName = file
-  
-            return `(${city_id},${country_id},${id},'${escapedHotelName}','${escapedSearchable}',${stars},'${escapedType}','${escapedAddress}',${escapedGallery},${image},${Latitude},${Longitude},'${Location}','${escapedTranslations}',${contact},'${fileName}')`;
-          }).join(",");
-  
-          const query = `INSERT INTO hoteldetails(city_id,country_id,id,hotelname,Searchable,stars,type,address,gallery_image,image,Latitude,Longitude,Location,translations,contact,file) VALUES ${values}`;
-          const result = await this.manager.query(query);
-        } 
-      }
-  
-    } catch (error) {
-      console.error("Error inserting Hotel Details:", error);
-    }
-  }
-
-  async insertHotelXml(body: any) {
-    try {
-      const filepath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/Hotels.xml`;
-      const xmlData = fs.readFileSync(filepath, 'utf-8');
-      const parser = new xml2js.Parser();
-      const parsedData = await parser.parseStringPromise(xmlData);
-  
-      let Hotels = parsedData.HotelStaticData.Hotel;
-  
-      const values = Hotels.map((el: any) => {
-        const id = el.$.ID ?? null;
-        const city_id = el?.$?.CityID ?? null;
-        const country_id = el?.$?.CountryID ?? null;
-        const Latitude = el?.$?.Latitude ?? null;
-        const Longitude = el?.$?.Longitude ?? null;
-        const name = el.$.Name ?? '';
-        const recommended = el?.$?.Recommended ?? '';
-        const searchable = el.$.Searchable ?? ''; 
-        const stars = el.$.Stars ?? null;
-        const type = el.$.Type ?? '';
-  
-        const escapedName = name.replace(/'/g, "''");
-        const escapedSearchable = searchable.replace(/'/g, "''"); 
-        const escapedType = type.replace(/'/g, "''");
-  
-        return `(${id}, ${city_id}, ${country_id}, ${Latitude}, ${Longitude}, '${escapedName}', '${recommended}', '${escapedSearchable}', ${stars}, '${escapedType}')`;
-      }).join(",");
-  
-      const query = `INSERT INTO hotels (id, city_id, country_id, Latitude, Longitude, name, recommended, Searchable, stars, type) VALUES ${values}`;
-      const result = await this.manager.query(query);
-  
-      if (result) {
-        console.log("Hotels inserted successfully");
-      }
-  
-    } catch (error) {
-      console.error("Error inserting hotels:", error);
-    }
-  }
-
-  async insertLocationXml(body: any) {
-    try {
-      const filepath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/Locations.xml`;
-      const xmlData = fs.readFileSync(filepath, 'utf-8');
-      const parser = new xml2js.Parser();
-      const parsedData = await parser.parseStringPromise(xmlData);
-  
-      let Locations = parsedData.LocationStaticData.Location;
-  
-      const values = Locations.map((el: any) => {
-        const id = el.$.ID ?? null;
-        const city_id = el?.$?.CityID ?? null;
-        const code = el?.$?.Code ?? null;
-        const name = el.$.Name ?? '';
-        const searchable = el.$.Searchable ?? ''; 
-        const type = el.$.Type ?? '';
-        const Latitude = el?.Position?.[0].$?.Latitude ?? "";
-        const Longitude = el?.Position?.[0].$?.Longitude ?? "";
-        const linkedCity = el?.LinkedCities?.[0] ?? "";
-  
-        const escapedName = name.replace(/'/g, "''");
-        const escapedSearchable = searchable.replace(/'/g, "''"); 
-        const escapedType = type.replace(/'/g, "''");
-  
-        return `(${id}, ${city_id}, ${code}, '${escapedName}', '${escapedSearchable}', '${escapedType}', '${linkedCity}', '${Latitude}', '${Longitude}')`;
-      }).join(",");
-  
-      const query = `INSERT INTO hotellocation (id, city_id, code, name, Searchable, type, linkedCities, Latitude, Longitude) VALUES ${values}`;
-      const result = await this.manager.query(query);
-  
-      if (result) {
-        console.log("Hotels inserted successfully");
-      }
-  
-    } catch (error) {
-      console.error("Error inserting hotels:", error);
-    }
-  }
-
-  async insertNationXml(body: any) {
-    try {
-      const filepath = `/Users/adithya/Provab/capital-sky/CapitalSky-webservice/Nationalities.xml`;
-      const xmlData = fs.readFileSync(filepath, 'utf-8');
-      const parser = new xml2js.Parser();
-      const parsedData = await parser.parseStringPromise(xmlData);
-  
-      let Nationalities = parsedData.NationalityStaticData.Nationality;
-  
-      const values = Nationalities.map((el: any) => {
-        const id = el?.$?.ID ?? null;
-        const name = el?.$?.Name ??  "";
-        const ISO = el?.$?.ISO ?? "";
-  
-        const escapedName = name.replace(/'/g, "''");
-        const escapedISO = ISO.replace(/'/g, "''"); 
-  
-        return `(${id}, '${escapedName}', '${escapedISO}')`;
-      }).join(",");
-  
-      const query = `INSERT INTO nationalities (id, name, ISO) VALUES ${values}`;
-      const result = await this.manager.query(query);
-  
-      if (result) {
-        console.log("Hotels inserted successfully");
-      }
-  
-    } catch (error) {
-      console.error("Error inserting hotels:", error);
-    }
   }
   
 }

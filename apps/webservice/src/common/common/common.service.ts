@@ -23,6 +23,9 @@ var btoa = require("btoa");
 const crypto = require("crypto");
 const OTP_TIMEOUT = 300;
 const OTP_RETRY_LIMIT = 5;
+const fs =require("fs")
+import * as xml2js from "xml2js";
+
 @Injectable()
 export class CommonService extends CommonApi {
   findAllState(body: {
@@ -790,5 +793,75 @@ export class CommonService extends CommonApi {
       },
   };
     return configs[service] || configs.default;
+}
+
+async insertHotelDetails() {
+  try {
+    const folderPath = `/Users/adithya/Provab/capital-sky-webservice/Capital-webservice/HotelDetails/`;
+    const files = fs.readdirSync(folderPath);
+    const parser = new xml2js.Parser();
+
+    // Loop through each XML file
+    for (const file of files) {
+      let fileName;
+      const filePath = `${folderPath}${file}`;
+      const xmlData = fs.readFileSync(filePath, "utf-8");
+      const parsedData = await parser.parseStringPromise(xmlData);
+
+      let hotelDetails =
+        parsedData.HotelDetailsStaticData?.HotelDetails ?? [];
+
+      if (hotelDetails && hotelDetails.length > 0) {
+        const values = hotelDetails
+          .map((el: any) => {
+            const city_id = el?.$?.CityID ?? "";
+            const country_id = el?.$?.CountryID ?? "";
+            const id = el?.$?.ID ?? "";
+            const hotelname = el?.$?.Name?.replace(/'/g, "''") ?? "";
+            const searchable = el?.$?.Searchable ?? "";
+            const stars = el?.$?.Stars ?? "";
+            const type = el?.$?.Type ?? "";
+            const address = el?.Address?.[0] ?? "NULL"; // Fallback to 'NULL' if Address is missing
+            const gallery =
+              el?.Gallery && el?.Gallery[0]?.GalleryImage
+                ? JSON.stringify(
+                    el.Gallery[0].GalleryImage.map((item: any) => item.$.URL)
+                  )
+                : "NULL"; // Handle missing Gallery
+            const image = el?.Image?.[0]?.$?.URL
+              ? `'${el.Image[0].$.URL.replace(/'/g, "''")}'`
+              : "NULL"; // Handle missing Image
+            const Latitude = el?.Position?.[0]?.$.Latitude ?? "NULL"; // Handle missing Position (Latitude)
+            const Longitude = el?.Position?.[0]?.$.Longitude ?? "NULL"; // Handle missing Position (Longitude)
+            // const Location = el?.Location?.[0] ?? 'NULL';
+            const Location = el?.Location?.[0]?.replace(/'/g, "''") ?? "NULL";
+            const translations = el?.Translations?.[0] ?? "NULL"; // Handle missing Translations
+            const contact = el?.Contact?.[0]?.Fax
+              ? `'${el.Contact[0].Fax[0]}'`
+              : el?.Contact?.[0]?.Email
+              ? `'${el.Contact[0].Email[0]}'`
+              : "NULL";
+            const escapedHotelName = hotelname.replace(/'/g, "''");
+            const escapedAddress = address.replace(/'/g, "''");
+            const escapedTranslations = translations.replace(/'/g, "''");
+            const escapedSearchable = searchable.replace(/'/g, "''");
+            const escapedType = type.replace(/'/g, "''");
+            const escapedGallery =
+              gallery !== "NULL"
+                ? `'${gallery.replace(/'/g, "''")}'`
+                : "NULL";
+            const fileName = file;
+
+            return `(${city_id},${country_id},${id},'${escapedHotelName}','${escapedSearchable}',${stars},'${escapedType}','${escapedAddress}',${escapedGallery},${image},${Latitude},${Longitude},'${Location}','${escapedTranslations}',${contact},'${fileName}')`;
+          })
+          .join(",");
+
+        const query = `INSERT INTO hoteldetails(city_id,country_id,id,hotelname,Searchable,stars,type,address,gallery_image,image,Latitude,Longitude,Location,translations,contact,file) VALUES ${values}`;
+        const result = await this.manager.query(query);
+      }
+    }
+  } catch (error) {
+    console.error("Error inserting Hotel Details:", error);
+  }
 }
 }

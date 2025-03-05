@@ -406,40 +406,4 @@ export class HotelController {
         
       }
   }
-
-  @Post('insertCities')
-  @HttpCode(200)
-  async insertCities(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertCities(body);
-  }
-
-  @Post('insertcountries')
-  @HttpCode(200)
-  async insertCountries(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertCountries(body);
-  }
-
-  @Post('insertHotelDetails')
-  @HttpCode(200)
-  async insertHotelDetails(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertHotelDetails(body);
-  }
-
-  @Post('insertHotelXml')
-  @HttpCode(200)
-  async insertHotelDetail(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertHotelXml(body);
-    }
-
-  @Post('insertLocationXml')
-  @HttpCode(200)
-  async insertLocationXml(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertLocationXml(body);
-    }
-
-    @Post('insertNationXml')
-  @HttpCode(200)
-  async insertNationXml(@Body() body: any): Promise<any> {
-    return await this.hotelService.insertNationXml(body);
-    }
 }

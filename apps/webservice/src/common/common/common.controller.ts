@@ -181,4 +181,10 @@ export class CommonController {
     async listCustomerFaq(@Body() body:any):Promise<any>{
         return this.commonService.ListCustomerFaq(body);
     }
+
+    @Post('insertHotelDetails')
+    @HttpCode(200)
+    async insertHotelDetails(@Body() body: any): Promise<any> {
+      return await this.commonService.insertHotelDetails();
+    }
 }
