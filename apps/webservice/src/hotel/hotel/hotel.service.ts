@@ -378,9 +378,4 @@ export class HotelService extends BaseApi {
     return  hotelBooking;
   }
 
-
-  async CityData(): Promise<any> {
-    return await this.tboHolidaysDotComService.CountryList();
-  }
-
 }
