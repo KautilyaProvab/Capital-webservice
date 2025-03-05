@@ -727,7 +727,6 @@ export class IRIXService extends HotelApi {
               fiscalIdentificationNumber: "",
               identityNo: "",
             },
-            birthdate:paxData.date_of_birth,
             address: paxData["address"],
             country: paxData["country"],
             city: paxData["city"],
@@ -762,6 +761,7 @@ export class IRIXService extends HotelApi {
       rooms: Pax,
       payment: {
         method: payment,
+        ...paymentMethod
         ...paymentMethod
       },
       backOfficeRemarks: [

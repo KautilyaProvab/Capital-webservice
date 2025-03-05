@@ -2,13 +2,7 @@ import * as moment from "moment";
 import { formatDate } from "../app.helper";
 import { BaseApi } from "../base.api";
 import { RedisServerService } from "../shared/redis-server.service";
-import {
-  HUMMING_BIRD_BOOKING_SOURCE,
-  CRS_HOTEL_BOOKING_SOURCE,
-  STUBA_HOTEL_BOOKING_SOURCE,
-} from "../constants";
 import { AddPaxDetailsHotelCRS } from "./hotel/hotel-types/hotel.types";
-import { BlockRoom } from "./hotel/third-party-services/hote-crs.types";
 export abstract class HotelApi extends BaseApi {
   constructor() {
     super();
@@ -305,41 +299,6 @@ export abstract class HotelApi extends BaseApi {
     return paxDetails;
   }
 
-  formatPaxDetailsUniversalCRS(
-    body: AddPaxDetailsHotelCRS,
-    hotelData: BlockRoom
-  ) {
-    let paxDetails = [];
-    body.RoomDetails.forEach((room) => {
-      room.PassengerDetails.forEach((pax) => {
-        let paxes = {
-          app_reference: body.AppReference,
-          title: pax?.Title || "",
-          first_name: pax?.FirstName || "",
-          last_name: pax?.LastName || "",
-          date_of_birth: pax.Dob ? pax.Dob : null,
-          age: pax.Age ? pax.Age : null,
-          pax_type: +pax.PaxType == 0 ? "Child" : "Adult",
-          address: room.AddressDetails.Address,
-          RoomId: pax.RoomId,
-          city: room.AddressDetails.City,
-          state: room.AddressDetails.State,
-          postal_code: room.AddressDetails.PostalCode,
-          email: room.AddressDetails.Email,
-          phone_code: room.AddressDetails.PhoneCode,
-          phone: room.AddressDetails.Contact,
-          country: room.AddressDetails.Country,
-          status: "BOOKING_HOLD",
-          created_by_id: body.UserId,
-          attributes: JSON.stringify(pax).replace(/"/g, "'"),
-          supplier_id: hotelData.CreatedById,
-        };
-        paxDetails.push(paxes);
-      });
-    });
-    return paxDetails;
-  }
-
   formatBookingItineraryDetailsUniversal(body) {
     let itineararyDetails = [];
     const hotelData = body["HotelData"];
@@ -376,48 +335,6 @@ export abstract class HotelApi extends BaseApi {
         created_by_id: body.userId ? body.userId : 0,
         agent_markup: body.agent_markup ? body.agent_markup : null,
         attributes: itinerary.paxCount,
-      };
-      itineararyDetails.push(itineraries);
-    });
-    return itineararyDetails;
-  }
-
-  formatBookingItineraryDetailsUniversalCRS(
-    body: AddPaxDetailsHotelCRS,
-    hotelData: BlockRoom
-  ) {
-    let itineararyDetails = [];
-    // const hotelData = body["HotelData"];
-
-    hotelData.RoomDetails.forEach((itinerary) => {
-      const attributes = Buffer.from(JSON.stringify(itinerary)).toString(
-        "base64"
-      );
-      let itineraries = {
-        app_reference: body.AppReference,
-        location: hotelData.Latitude + "," + hotelData.Longitude,
-        room_type_name: itinerary.RoomType,
-        bed_type_code: itinerary.Description,
-        meal_plan_code: itinerary.MealPlanCode,
-        room_name: itinerary.RoomName,
-        room_id: itinerary.Id,
-        check_in: hotelData.CheckIn,
-        check_out: hotelData.CheckOut,
-        status: "BOOKING_HOLD",
-        cancellation_policy: JSON.stringify(
-          itinerary.cancellationPolicies
-        ).replace(/"/g, "'"),
-        total_fare: parseFloat(itinerary.Price.Amount) || 0,
-        currency: itinerary?.Price?.Currency || "",
-        room_price: parseFloat(itinerary.Price.Amount) || 0,
-        tax: "",
-        discount: itinerary.Price.EligibleDiscount || 0,
-        max_occupancy: itinerary.Occupancy || 0,
-        adult_count: itinerary.AdultCount || 0,
-        child_count: itinerary.ChildrenCount || 0,
-        created_by_id: body.UserId || 0,
-        attributes: attributes,
-        supplier_id: hotelData.CreatedById,
       };
       itineararyDetails.push(itineraries);
     });
@@ -476,16 +393,6 @@ export abstract class HotelApi extends BaseApi {
 
     let formattedJson: any = {};
     let totalFare: any;
-    if (bookingDetails.Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-      //base 64 decode then parse the json
-      const buff = Buffer.from(bookingDetails.attributes, "base64");
-      const text = buff.toString("utf-8");
-      formattedJson = JSON.parse(text)
-      if (formattedJson.hotelBody && formattedJson.hotelBody.RoomDetails && formattedJson.hotelBody.RoomDetails[0].Price) {
-        formattedJson.hotelBody.RoomDetails[0].Price.Amount = Number(formattedJson.hotelBody.RoomDetails[0].Price.Amount) + Number(bookingDetails.convinence_amount);
-        totalFare = formattedJson.hotelBody.RoomDetails[0].Price;
-      }
-    } else {
       formattedJson = bookingDetails.attributes.replace(/'/g, '"');
       formattedJson = JSON.parse(formattedJson);
       console.log("formattedJson:", formattedJson.RoomDetails);
@@ -493,7 +400,7 @@ export abstract class HotelApi extends BaseApi {
       formattedJson.RoomDetails[0].price += Number(bookingDetails.convinence_value)
       
       totalFare = formattedJson.RoomDetails[0].price;
-    }
+    
     
     console.log('formattedJson: ', formattedJson);
 
@@ -571,28 +478,6 @@ export abstract class HotelApi extends BaseApi {
     let CancelDeadline = moment(+bookingDetails.cancel_deadline).format(
       "DD-MM-YYYY HH:mm:ss"
     );
-    // console.log("BookingDetails-", bookingDetails.attributes);
-    // let formattedJson = JSON.parse(bookingDetails.attributes.replace(/'/g, '"'));
-    // let formattedJson = JSON.parse(bookingDetails.attributes.replace(/'/g, '"'));
-
-    if (bookingDetails && bookingDetails.attributes !== undefined) {
-      try {
-        if (bookingDetails.Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-          //base 64 decode then parse the json
-          const buff = Buffer.from(bookingDetails.attributes, "base64");
-          const text = buff.toString("utf-8");
-          formattedJson = JSON.parse(text);
-        } else {
-          // formattedJson = JSON.parse(
-          //   bookingDetails.attributes.replace(/'/g, '"')
-          // );
-        }
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    } else {
-      console.log("bookingDetails or bookingDetails.attributes is undefined");
-    }
 
     let cancellation_policy;
 
@@ -606,23 +491,6 @@ export abstract class HotelApi extends BaseApi {
     } else {
       cancellation_policy = bookingDetails.cancellation_policy;
     }
-    if (bookingDetails.Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-      console.log('CRS_HOTEL_BOOKING_SOURCE:', CRS_HOTEL_BOOKING_SOURCE);
-      // convert base64 to utf-8
-      const buff = Buffer.from(bookingDetails.cancellation_policy, "base64");
-      cancellation_policy = buff
-        .toString("utf-8")
-        .split("\t\t\t");
-      console.log('cancellation_policy', cancellation_policy);
-
-      //   .map((item) => JSON.parse(JSON.parse(item.replace(/'/g, '"'))["$t"]));
-      // cancellation_policy = this.formatCancellationPolicy(
-      //   cancellation_policy,
-      //   checkin
-      // ).join("\n");
-      // cancellation_policy
-      cancellation_policy = Array.isArray(cancellation_policy) ? JSON.parse(cancellation_policy[0]) : JSON.parse(cancellation_policy);
-    }
     if (bookingDetails.confirmation_reference) {
       bookingDetails.booking_id = bookingDetails.confirmation_reference;
     }
@@ -630,9 +498,6 @@ export abstract class HotelApi extends BaseApi {
         if (bookingDetails.confirmation_reference) {
             bookingDetails.booking_id = bookingDetails.confirmation_reference;
         }       
-        if(body.Booking_code == HUMMING_BIRD_BOOKING_SOURCE){
-            bookingDetails.cancellation_policy = JSON.parse(bookingDetails.cancellation_policy.replace(/'/g, '"'))
-        }
 
   return {
       BookingPaxDetails: paxDetails,

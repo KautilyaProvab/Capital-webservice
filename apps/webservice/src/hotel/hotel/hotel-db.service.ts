@@ -13,29 +13,14 @@ import {
   ExchangeRate_1_USD_to_BDT,
   SUPPORT_EMAIL,
   BOOKING247_HELPLINE_NUMBER,
-  HOTELBEDS_HOTEL_BOOKING_SOURCE,
   BASE_CURRENCY,
-  TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE,
-  STUBA_HOTEL_BOOKING_SOURCE,
-  HUMMING_BIRD_BOOKING_SOURCE,
-  DOTW_HOTEL_BOOKING_SOURCE,
-  STUBA_URL,
   logStoragePath,
-  STUBA_ORG,
-  STUBA_CURRENCY,
-  STUBA_PWD,
-  STUBA_USER,
-  CRS_HOTEL_BOOKING_SOURCE,
+  IRIX_HOTEL_BOOKING_SOURCE,
 } from "../../constants";
 import { PaymentGatewayService } from "../../payment-gateway/payment-gateway.service";
 import { RedisServerService } from "../../shared/redis-server.service";
 import { HotelApi } from "../hotel.api";
-import { RecentSearchDto } from "./swagger";
 import { HotelTopDestinationsAdminDto } from "./swagger";
-import { parse } from "querystring";
-import { AddPaxDetailsHotelCRS } from "./hotel-types/hotel.types";
-import { BlockRoom } from "./third-party-services/hote-crs.types";
-import { ActivityDbService } from "apps/webservice/src/activity/activity/activity-db.service";
 const fs = require("fs");
 // const convertCurrency = require('nodejs-currency-converter');
 
@@ -46,7 +31,6 @@ export class HotelDbService extends HotelApi {
     private readonly httpService: HttpService,
     private readonly mailerService: MailerService,
     private readonly commonService: CommonService,
-    private readonly activityDbService: ActivityDbService,
     @InjectPdf() private readonly pdf: PDF
   ) {
     super();
@@ -481,24 +465,13 @@ export class HotelDbService extends HotelApi {
     if(body.parsedInfo.RoomDetails[0] != undefined && body.parsedInfo.RoomDetails[0].NonRefundable != undefined && body.parsedInfo.RoomDetails[0].NonRefundable == false){
       refundable =true;
     }
-    if (body.source == HOTELBEDS_HOTEL_BOOKING_SOURCE) {
-      body.RoomData.forEach((roomElement) => {
-        BlockRoomId.push(roomElement.roomId);
-      });
-      body.parsedInfo.BlockRoomId = BlockRoomId;
-      body.parsedInfo.RoomDetails = body.RoomData;
-      body.parsedInfo.searchRequest = hotelBody.searchRequest;
-    }
     const roomData = body["RoomData"][0];
    
     const query = `SELECT * FROM core_payment_charges WHERE module = 'Hotel';`
     const queryResponse = await this.manager.query(query);
 
     let responseToken;
-    
-    if (hotelBody.searchRequest.booking_source == HUMMING_BIRD_BOOKING_SOURCE) {
-      responseToken = body.parsedInfo.responseToken;
-    }
+
 
     body.userId = body.userId ? body.userId : 0;
     let cancellation_policy = "";
@@ -562,127 +535,8 @@ export class HotelDbService extends HotelApi {
       const query = `UPDATE core_promocodes SET status = 0 WHERE id = ${firstPromo.id}`;
       this.manager.query(query);
     }
-    if ( hotelBody.searchRequest.booking_source == HOTELBEDS_HOTEL_BOOKING_SOURCE) {
-      if (roomData.currency != BASE_CURRENCY) {   
-        let currencyDetails = await this.formatPriceDetailToSelectedCurrency(
-          roomData.currency
-        );
-        conversionRate = currencyDetails["value"];
-      }
-      
-      hotelBody.cancellationPolicy = JSON.parse(hotelBody.cancellationPolicy);
-      let cancelationString = ``;
-      hotelBody.cancellationPolicy.forEach((cancelElement) => {
-        cancelationString += ` Cancellation Charge ${cancelElement.amount} ${hotelBody.searchRequest.Currency} From ${cancelElement.from
-          } ,`;
-      });
-      cancellation_policy = body.parsedInfo.CancelPolicy;
-      totalPrice =body.parsedInfo.Price.Amount - discountAmount;
-    } else if (hotelBody.searchRequest.booking_source == STUBA_HOTEL_BOOKING_SOURCE){
-      hotelBody.checkin = await this.changeDateFormatIfNeeded(hotelBody.checkin);
-      hotelBody.checkout = await this.changeDateFormatIfNeeded(hotelBody.checkout);
-
-      if (!Array.isArray(body.BookingPrepareResult['Booking']['HotelBooking'])) {
-        body.BookingPrepareResult['Booking']['HotelBooking'] = [body.BookingPrepareResult['Booking']['HotelBooking']];
-    }
-    if (body.BookingPrepareResult['Currency']['$t'] !== BASE_CURRENCY  && body.BookingPrepareResult['Currency']['$t']  !== hotelBody.searchRequest.Currency  )  {
-      currencyDetails = await this.formatPriceDetailToSelectedCurrency(body.BookingPrepareResult.Currency['$t']);
-      stuba_currency_conversion = currencyDetails?.value ?? 1;
-   }   
-
-   let StubaPolicyMarkup = await this.getMarkup(hotelBody.searchRequest)
-
-  let StubacancellationTextOriginal = '';
-  let StubacancellationMinus3Days = ''
-  const cancellationDataOriginal: Record<string, { totalAmount: number; currency: string; policyStatus: string }> = {};
-  const cancellationDataModified: Record<string, { totalAmount: number; currency: string; policyStatus: string }> = {};
-  
-  body.BookingPrepareResult['Booking']['HotelBooking'].forEach((Room) => {
-      let StubaRoom = Room['Room'];
-      const policyStatus = StubaRoom?.CancellationPolicyStatus?.['$t'] || 'NoNRefundable';
-      
-      let stubaFees = StubaRoom?.CanxFees?.Fee;
-      if (!Array.isArray(stubaFees)) {
-          stubaFees = stubaFees ? [stubaFees] : [];
-      }
-      stubaFees.forEach((fee) => {
-          const originalDateKey = fee?.from || 'NoDate';
-          let modifiedDateKey = originalDateKey;
-  
-          if (originalDateKey !== 'NoDate') {
-              const originalDate = new Date(originalDateKey);
-              originalDate.setDate(originalDate.getDate() - 3);
-              const day = String(originalDate.getDate()).padStart(2, '0');
-              const month = String(originalDate.getMonth() + 1).padStart(2, '0');
-              const year = originalDate.getFullYear();
-              const time = originalDate.toISOString().split('T')[1]; 
-              modifiedDateKey = `${day}-${month}-${year} T ${time}`;
-          }
-  
-          const amount = (fee.Amount.amt / stuba_currency_conversion) * conversionRate;
-          if (!cancellationDataOriginal[originalDateKey]) {
-              cancellationDataOriginal[originalDateKey] = { totalAmount: 0, currency: hotelBody.searchRequest.Currency, policyStatus };
-          }
-          cancellationDataOriginal[originalDateKey].totalAmount += amount;
-
-          if (!cancellationDataModified[modifiedDateKey]) {
-              cancellationDataModified[modifiedDateKey] = { totalAmount: 0, currency: hotelBody.searchRequest.Currency, policyStatus };
-          }
-          cancellationDataModified[modifiedDateKey].totalAmount += amount;
-      });
-  });
-  
-  for (const [date, data] of Object.entries(cancellationDataOriginal)) {
-      if (date !== 'NoDate') {
-           let markupDetails = await this.markupDetails(StubaPolicyMarkup, data.totalAmount);
-      if (hotelBody.searchRequest.UserType == "B2B"){
-       data.totalAmount = (data.totalAmount + markupDetails.AdminMarkup + markupDetails.AgentMarkup ).toFixed(2) ;
-      }else if (hotelBody.searchRequest.UserType == "B2C"){
-        data.totalAmount = parseFloat(markupDetails.AdminMarkup);
-        data.totalAmount = Number((data.totalAmount + markupDetails.AdminMarkup ).toFixed(2))
-      }
-          StubacancellationTextOriginal += `The cancellation policy is ${data.policyStatus} and Cancellation Charge ${data.totalAmount} ${data.currency} From ${date} , `;
-      } else {
-        let markupDetails = await this.markupDetails(StubaPolicyMarkup, data.totalAmount);
-        if (hotelBody.searchRequest.UserType == "B2B"){
-         data.totalAmount = (data.totalAmount + markupDetails.AdminMarkup + markupDetails.AgentMarkup ).toFixed(2) ;
-        }else if (hotelBody.searchRequest.UserType == "B2C"){
-          data.totalAmount = parseFloat(markupDetails.AdminMarkup);
-          data.totalAmount = Number((data.totalAmount + markupDetails.AdminMarkup ).toFixed(2))
-        }
-          StubacancellationTextOriginal += `The cancellation policy is ${data.policyStatus} and Cancellation Charge ${data.totalAmount} ${data.currency}, `;
-      }
-  }
-
-  for (const [date, data] of Object.entries(cancellationDataModified)) {
-      if (date !== 'NoDate') {
-        let markupDetails = await this.markupDetails(StubaPolicyMarkup, data.totalAmount);
-        if (hotelBody.searchRequest.UserType == "B2B"){
-         data.totalAmount = (data.totalAmount + markupDetails.AdminMarkup + markupDetails.AgentMarkup ).toFixed(2) ;
-        }else if (hotelBody.searchRequest.UserType == "B2C"){
-          data.totalAmount = parseFloat(markupDetails.AdminMarkup);
-          data.totalAmount = Number((data.totalAmount + markupDetails.AdminMarkup ).toFixed(2))
-        }
-        StubacancellationMinus3Days += `The cancellation policy is ${data.policyStatus} and Cancellation Charge ${data.totalAmount} ${data.currency} From ${date} , `;
-      } else {
-        let markupDetails = await this.markupDetails(StubaPolicyMarkup, data.totalAmount);
-        if (hotelBody.searchRequest.UserType == "B2B"){
-         data.totalAmount = (data.totalAmount + markupDetails.AdminMarkup + markupDetails.AgentMarkup ).toFixed(2) ;
-        }else if (hotelBody.searchRequest.UserType == "B2C"){
-          data.totalAmount = parseFloat(markupDetails.AdminMarkup);
-          data.totalAmount = Number((data.totalAmount + markupDetails.AdminMarkup ).toFixed(2))
-        }
-        StubacancellationMinus3Days += `The cancellation policy is ${data.policyStatus} and Cancellation Charge ${data.totalAmount} ${data.currency}, `;
-      }
-  }
-     OrginalCancelationPolicy = StubacancellationTextOriginal.trim().replace(/, $/, '.');
-     cancellation_policy   = StubacancellationMinus3Days.trim().replace(/, $/, '.');
-
-    }
-    else {
       if (hotelBody.cancellationPolicy) {
         cancellation_policy = hotelBody.cancellationPolicy.replace(/"/g, "'");      
-      }
     }
     let pay_mode="wallet";
     if (body.HotelData.searchRequest['UserType'] === "B2C") {
@@ -709,24 +563,7 @@ export class HotelDbService extends HotelApi {
           ConvenienceFee = Number((ConvenienceFee * totalAdultsAndChildren).toFixed(2));
         }
       }
-     
-      // totalPrice = totalPrice + ConvenienceFee;
-    // }
-
-    if(body.source == TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE){
-      if(body.parsedInfo.RoomDetails[0].RateConditions){
-        delete body.parsedInfo.RoomDetails[0].RateConditions
-      }
-    }
-
-    if ( hotelBody.searchRequest.booking_source == DOTW_HOTEL_BOOKING_SOURCE) {
-      cancellation_policy = body.parsedInfo.RoomDetails[0].cancellationPolicies
-    }
-    
     let  cancellationDeadline = body.parsedInfo.RoomDetails[0]?.cancellationDeadline ?? ""
-    if(cancellationDeadline != "" && hotelBody.searchRequest.booking_source != STUBA_HOTEL_BOOKING_SOURCE){
-      cancellationDeadline= new Date(body.parsedInfo.RoomDetails[0].cancellationDeadline)
-    }
     console.log("cancellationDeadline-",cancellationDeadline);
     cancellationDeadline = await this.changeDateFormatIfNeeded(cancellationDeadline);
     console.log("cancellationDeadline2-",cancellationDeadline);
@@ -1482,32 +1319,6 @@ export class HotelDbService extends HotelApi {
   async hotelGiataId(hotelId: any, api: any): Promise<any> {
     let hotelcode: any = ``;
     let availStatus: any = ``;
-
-    if (api == HOTELBEDS_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` hotelbeds `;
-      availStatus = ` hotelbeds_status `
-    } else if (api == TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` TravelBoutiqueOnline `;
-      availStatus = ` TravelBoutiqueOnline_status `
-
-    } else if (api == STUBA_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` roomsxml `;
-      availStatus = ` roomsxml_status `
-
-    } else if (api == HUMMING_BIRD_BOOKING_SOURCE) {
-      hotelcode = ` hummingbird_travel `;
-      availStatus = ` hummingbird_status `
-
-    } else if (api == DOTW_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` DOTW `;
-      availStatus = ` DOTW_status `
-
-    } else {
-
-
-    }
-
-
     const query = `SELECT giata_code,${hotelcode} as hotel_code FROM giata_property_data WHERE ${hotelcode} IN (${hotelId}) AND ${hotelcode} !='' `;
     const result = await this.manager.query(query);
     const formattedResult = result.reduce((acc, item) => {
@@ -1522,43 +1333,13 @@ export class HotelDbService extends HotelApi {
     let hotelcode: any = ``;
     let availStatus: any = ``;
 
-    if (api == HOTELBEDS_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` hotelbeds `;
-      availStatus = ` hotelbeds_status `
-    } else if (api == TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` TravelBoutiqueOnline `;
-      availStatus = ` TravelBoutiqueOnline_status `
-
-    } else if (api == STUBA_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` roomsxml `;
-      availStatus = ` roomsxml_status `
-
-    } else if (api == HUMMING_BIRD_BOOKING_SOURCE) {
-      hotelcode = ` hummingbird_travel `;
-      availStatus = ` hummingbird_status `
-
-    } else if (api == DOTW_HOTEL_BOOKING_SOURCE) {
-      hotelcode = ` DOTW `;
-      availStatus = ` DOTW_status `
-
-    } else {
-
-    }
-
     const query = `SELECT ${hotelcode} as hotel_code , city_name FROM giata_property_data WHERE city_code = ${destId} AND ${hotelcode} !='' LIMIT 100`;
     const result = await this.manager.query(query);
     let hotelIds = [];
     result.forEach((element) => {
       hotelIds.push(element.hotel_code);
     });
-    if (api == DOTW_HOTEL_BOOKING_SOURCE) {
-      return {
-        hotelIds,
-        city_name: result[0].city_name
-      };
-    } else {
       return hotelIds;
-    }
   }
 
 
@@ -1612,26 +1393,13 @@ export class HotelDbService extends HotelApi {
   formatHotelRoomData(dat: any) {
 
     let data = dat['HotelData']
-    if (data.searchRequest.booking_source == HUMMING_BIRD_BOOKING_SOURCE) {
-      data.HotelPolicy = data.RoomDetails[0].cancellationPolicies
-    }
-
-    if (data.searchRequest.booking_source == TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE) {
-      data.HotelPolicy = data.RoomDetails[0].cancellationPolicies
-    }
-
-    if (data.searchRequest.booking_source == STUBA_HOTEL_BOOKING_SOURCE) {
-      data.HotelPicture;
-    } else {
       data.HotelPicture = JSON.stringify(data.HotelPicture);
-    }
-
     if (data)
       // data.Remarks = data.Remarks.replace(/\n/g, ' ');
       data.Remarks = "";
     let HotelData = {
       hotelName: data.HotelName,
-      hotelId: data.HotelCode,
+      hotelId: data.HotelCode ?? "",
       starRating: data.StarRating,
       address: data.HotelAddress,
       countryCode: "",
@@ -1704,359 +1472,16 @@ export class HotelDbService extends HotelApi {
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
 
-  async addHotelBookingDetailsCRS(
-    body: AddPaxDetailsHotelCRS,
-    hotelBody: BlockRoom,
-    total_cost: number
-  ): Promise<any> {
-    const cancellationPolicy = new Buffer(
-      hotelBody.RoomDetails.map((room) => room.cancellationPolicies).join(
-        "\t\t\t"
-      )
-    ).toString("base64");
-    const attributes = Buffer.from(
-      JSON.stringify({ body, hotelBody })
-    ).toString("base64");
-
-    const query = `SELECT * FROM core_payment_charges WHERE module = 'Hotel';`
-    const queryResponse = await this.manager.query(query);
-    console.log('queryResponse:', queryResponse);
-
-    let ConvenienceFee = 0;
-    let totalAdultsAndChildren = 0;
-    let convinenceValueType = '';
-    let percentageAdvanceTax = 0;
-
-    if (queryResponse[0].status == 1) {
-
-      if (queryResponse[0].fees_type === 'percentage') {
-        convinenceValueType = queryResponse[0].fees_type;
-        percentageAdvanceTax = ((total_cost * queryResponse[0].fees) / 100);
-        ConvenienceFee += Number(percentageAdvanceTax.toFixed(2));
-
-      } else if (queryResponse[0].fees_type === 'plus') {
-        convinenceValueType = queryResponse[0].fees_type;
-        percentageAdvanceTax = queryResponse[0].fees;
-        ConvenienceFee += Number(percentageAdvanceTax.toFixed(2));
-      }
-
-      if (queryResponse[0].added_per_pax === "Yes") {
-        totalAdultsAndChildren = hotelBody.searchRequest.RoomGuests.reduce((acc: any, item: any) => {
-          acc += item.NoOfAdults + item.NoOfChild;
-          return acc;
-        }, 0);
-        ConvenienceFee = Number((ConvenienceFee * totalAdultsAndChildren).toFixed(2));
-      }
-    }
-
-    let hotelCurrency = hotelBody.HotelCurrencyCode;
-    let conversion: any;
-    let currencyData;
-    if (hotelCurrency && hotelCurrency !== BASE_CURRENCY && queryResponse[0].fees_type === 'plus') {
-      currencyData = await this.activityDbService.formatPriceDetailToSelectedCurrency(hotelCurrency);
-      conversion = currencyData['value'];
-      ConvenienceFee = ConvenienceFee / Number(conversion);
-    }
-
-    let conversionRate = 1;
-    if (hotelBody.searchRequest.Currency && hotelBody.searchRequest.Currency != BASE_CURRENCY) {
-      let currencyDetails = await this.formatPriceDetailToSelectedCurrency(hotelBody.searchRequest.Currency);
-      conversionRate = currencyDetails['value'] ?? 1;
-    }
-
-    if (queryResponse[0].fees_type === 'plus') {
-      ConvenienceFee = parseFloat((ConvenienceFee * conversionRate).toFixed(2));
-    }
-
-    console.log({ 'conversionRate': conversionRate, 'ConvenienceFee': ConvenienceFee, 'percentageAdvanceTax': percentageAdvanceTax, 'convinenceValueType': convinenceValueType });
-    total_cost = parseFloat((total_cost + ConvenienceFee).toFixed(2));
-    console.log('total_cost:', total_cost);
-
-    let promoCode: any = [];
-    if (body.PromoCode) {
-      promoCode = await this.getGraphData(
-        `{
-            corePromocodes(where:{
-                promo_code:{
-                    eq: "${body.PromoCode}"
-                }
-                }){
-                    id
-                    promo_code
-                    discount_type
-                    discount_value
-                    use_type
-                }
-            }`,
-        "corePromocodes"
-      );
-    }
-
-    let discountAmount: any = 0;
-    let firstPromo: any = "";
-    if (promoCode.length > 0 && body.UserType === "B2C") {
-      firstPromo = promoCode[0];
-      if (firstPromo.discount_type === "percentage") {
-        discountAmount = parseFloat(((firstPromo.discount_value / 100) * total_cost).toFixed(2));
-        total_cost -= discountAmount;
-
-      } else if (firstPromo.discount_type === "plus") {
-        discountAmount = firstPromo.discount_value;
-        total_cost -= discountAmount;
-      }
-    }
-
-    if (firstPromo != "" && firstPromo.use_type === "Single") {
-      const query = `UPDATE core_promocodes SET status = 0 WHERE id = ${firstPromo.id}`;
-      this.manager.query(query);
-    }
-
-    const result = await this.getGraphData(
-      `mutation {
-					createHotelHotelBookingDetail(
-				  		hotelHotelBookingDetail: {
-							status: "BOOKING_HOLD"
-                            booking_from:""
-							app_reference: "${body.AppReference}"
-                            booking_source: "${hotelBody.searchRequest.UserType}"
-                            Api_id: "${body.booking_source}"
-                            domain_origin: "CRS"
-                            confirmation_reference : ""
-							hotel_name: "${hotelBody.HotelName}"
-							star_rating: ${hotelBody.StarRating || 0}
-                            hotel_code: "${hotelBody.HotelCode}"
-                            hotel_address: "${hotelBody.HotelAddress}"
-                            hotel_photo: "${hotelBody.HotelPicture}"
-                            phone_number: "${body.RoomDetails[0].AddressDetails.Contact
-      }"
-              email: "${body.RoomDetails[0].AddressDetails.Email}"
-							hotel_check_in: "${hotelBody.searchRequest.CheckIn}"
-                            hotel_check_out: "${hotelBody.searchRequest.CheckOut
-      }"
-                            convinence_value: "${ConvenienceFee}"
-                            convinence_value_type: "${convinenceValueType}"
-                            convinence_per_pax: ${totalAdultsAndChildren}
-                            convinence_amount: "${ConvenienceFee}"
-                            currency: "${hotelBody?.Price?.Currency}"
-                            created_by_id: "${body.UserId}"
-                            booking_reference: ""
-                            cancellation_policy: "${cancellationPolicy}"
-                            attributes: "${attributes}"
-                            created_datetime: "${moment().format(
-        "YYYY-MM-DD HH:mm:ss"
-      )}"
-                            promo_code: "${body.PromoCode ?? ''}"
-              TotalAmount: ${total_cost}
-              supplier_id: ${hotelBody.CreatedById}
-			}
-					) {
-						id
-						domain_origin
-						status
-						app_reference
-						confirmation_reference
-                        booking_source
-                        Api_id
-                        booking_reference
-						hotel_name
-                        star_rating
-                        hotel_address
-                        hotel_code
-                        hotel_photo
-						phone_number
-						alternate_number
-						email
-						hotel_check_in
-						hotel_check_out
-						payment_mode
-						convinence_value
-						convinence_value_type
-						convinence_per_pax
-						convinence_amount
-						promo_code
-						discount
-						currency
-						currency_conversion_rate
-						attributes
-						created_by_id
-                        created_at
-                        cancelled_datetime
-                        cancellation_policy
-                        created_datetime
-                        TotalAmount
-					}
-			  	}
-			`,
-      "createHotelHotelBookingDetail"
-    );
-    return result;
-  }
-  async addHotelItenaryDetailsCRS(
-    body: AddPaxDetailsHotelCRS,
-    hotelBody: BlockRoom
-  ): Promise<any> {
-    const formattedData = this.formatBookingItineraryDetailsUniversalCRS(
-      body,
-      hotelBody
-    );
-    const result = await this.getGraphData(
-      `mutation {
-            		createHotelHotelBookingItineraryDetails(
-                        hotelHotelBookingItineraryDetails:  ${JSON.stringify(
-        formattedData
-      ).replace(/"(\w+)"\s*:/g, "$1:")}
-            		) {
-            			id
-            			app_reference
-            			location
-            			check_in
-            			check_out
-            			room_id
-            			room_type_name
-            			bed_type_code
-                        status
-                        adult_count
-                        child_count
-            			smoking_preference
-            			total_fare
-            			admin_markup
-            			agent_markup
-            			currency
-            			attributes
-            			room_price
-                        tax
-                        max_occupancy
-            			extra_guest_charge
-                        cancellation_policy
-            			child_charge
-            			other_charges
-            			discount
-            			service_tax
-                        agent_commission
-            			tds
-                        gst
-                        created_by_id
-                        meal_plan_code
-                        room_name
-                  supplier_id
-            		}
-              	}
-            `,
-      "createHotelHotelBookingItineraryDetails"
-    );
-    return result;
-  }
-
-  async addHotelPaxDetailsCRS(paxDetails: any[]): Promise<any> {
-    const bookingPaxDetailsResp = await this.getGraphData(
-      `mutation {
-                    createHotelHotelBookingPaxDetails(
-                        hotelHotelBookingPaxDetails: ${JSON.stringify(
-        paxDetails
-      ).replace(/"(\w+)"\s*:/g, "$1:")}
-                    ) {
-                        id
-                        app_reference
-                        title
-                        first_name
-                        middle_name
-                        last_name
-                        phone
-                        email
-                        pax_type
-                        date_of_birth
-                        age
-                        passenger_nationality
-                        passport_number
-                        passport_issuing_country
-                        passport_expiry_date
-                        address
-                        address2
-                        city
-                        state
-                        country
-                        postal_code
-                        phone_code
-                        status
-                        attributes
-                        supplier_id
-                    }
-                }`,
-      "createHotelHotelBookingPaxDetails"
-    );
-    return bookingPaxDetailsResp;
-  }
-
-  async addPaxDetailsCRS(body: AddPaxDetailsHotelCRS) {
-    const appRefInDB = await this.getGraphData(
-      `query {
-                    hotelHotelBookingDetails (
-                        where: {
-                            app_reference: {
-                                eq: "${body.AppReference}"
-                            }
-                        }
-                    ) {
-                        app_reference
-                    }
-                }
-                `,
-      "hotelHotelBookingDetails"
-    );
-    if (appRefInDB.length > 0) {
-      const errorClass: any = getExceptionClassByCode(
-        "409 Duplicate entry for AppReference"
-      );
-      throw new errorClass("409 Duplicate entry for AppReference");
-    }
-    let resp = await this.redisServerService.read_list(body.ResultToken);
-    let parsedInfo: BlockRoom = JSON.parse(resp);
-
-    let total_cost = parsedInfo.RoomDetails.reduce((acc, room) => acc + (+room.Price.Amount), 0);
-    console.log('total_cost:', total_cost);
-
-    const hotelHotelDetails = await this.addHotelBookingDetailsCRS(
-      body,
-      parsedInfo,
-      total_cost
-    );
-    const hotelHotelItenaryDetails = await this.addHotelItenaryDetailsCRS(
-      body,
-      parsedInfo
-    );
-    const formatterPaxDetails = this.formatPaxDetailsUniversalCRS(
-      body,
-      parsedInfo
-    );
-    const hotelHotelpaxDetails = await this.addHotelPaxDetailsCRS(formatterPaxDetails)
-    //  await this.manager.query("UPDATE hotel_hotel_booking_detail SET TotalAmount = ? WHERE app_reference = ?", [total_cost, body.AppReference]);
-    return this.getHotelBookingPaxDetailsUniversal(
-      body,
-      hotelHotelpaxDetails,
-      hotelHotelDetails,
-      hotelHotelItenaryDetails
-    );
-  }
 
   async addPaxDetails(body: any): Promise<any> {
-    if (body.booking_source == CRS_HOTEL_BOOKING_SOURCE) {
-      return this.addPaxDetailsCRS(body);
-    }
     let resp = await this.redisServerService.read_list(body.ResultToken);
     let parsedInfo = JSON.parse(resp);
-   
     let Rooms = [];
     let BlockRoomId = [];
-    
     let parsedData = this.formatHotelRoomData(parsedInfo);
-
     let total_fare;
     let BookingPrepareResult;
-
-
     body.booking_from = "";
-
-     
     parsedData["appRef"] = body.AppReference;
     parsedData["userId"] = body.UserId ? body.UserId : "";
     parsedData["userType"] = body.UserType ? body.UserType : "";
@@ -2942,62 +2367,8 @@ async markupDetails(body: any, totalFare: any, exchangeRate: any = 1): Promise<a
     let formattedJson: any = {};
     let earlyBird = 0;
     let durationDiscount = 0;
-    if (result[0].Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-      // attributes
-      const buff = Buffer.from(result[0].attributes, "base64");
-      const text = buff.toString("utf-8");
-      formattedJson = JSON.parse(text);
-      // earlyBird = formattedJson.body.EarlyBirdValue;
-      // durationDiscount = formattedJson.body.DurationOfStayValue;
-      result[0].attributes = formattedJson;
-
-      // cancellation_policy
-      const bufff = Buffer.from(result[0].cancellation_policy, "base64");
-      result[0].cancellation_policy = bufff
-        .toString("utf-8")
-        .split("\t\t\t");
-      console.log('cancellation_policy', result[0].cancellation_policy);
-      let timeZoneOffset = formattedJson.hotelBody.LocalTimeZone;
-      result[0].cancellation_policy = Array.isArray(result[0].cancellation_policy) ? JSON.parse(result[0].cancellation_policy[0]) : JSON.parse(result[0].cancellation_policy);
-      if (result[0].cancellation_policy.$t && result[0].cancellation_policy.$t.length) {
-        result[0].cancellation_policy = result[0].cancellation_policy.$t;
-        result[0].cancellation_policy = await this.formatCancellationDetails(result[0].cancellation_policy, timeZoneOffset, result[0].TotalAmount);
-        console.log(result[0].cancellation_policy.join('\n\n'));
-      } else {
-        result[0].cancellation_policy = null;
-      }
-    }
 
     let discountHtml = '';
-    if (result[0].Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-      discountHtml = `
-        <tr>
-          <td><span>Early Bird - </span></td>
-          <td><span>${earlyBird}</span></td>
-        </tr>
-        <tr>
-          <td><span>Duration Discount - </span></td>
-          <td><span>${durationDiscount}</span></td>
-        </tr>
-      `;
-    }
-    // const priceDetails = JSON.parse(result[0].flightBookingTransactions[0].attributes)
-    // const created_by_id = result[0].created_by_id;
-
-    // const agencyResult = await this.getGraphData(
-    //   `
-    // query {
-    //     authUser(id:${created_by_id})
-    //     {
-    //         id
-    //         business_name
-    //         business_number
-    //         auth_role_id
-    //     }
-    // }
-    // `,
-    //   `authUser`
-    // );
     let itinerariesHtml = "";
     itineraries.forEach((element, index) => {
       itinerariesHtml =
@@ -3059,15 +2430,6 @@ async markupDetails(body: any, totalFare: any, exchangeRate: any = 1): Promise<a
     let cancellationHtml = '';
     if (result[0].cancellation_policy) {
       let cancellationPolicy = result[0].cancellation_policy;
-      if (Array.isArray(cancellationPolicy) && result[0].Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-        cancellationPolicy = cancellationPolicy.join('\n'); // Join array elements with newline
-      } else if (typeof cancellationPolicy !== 'string' && result[0].Api_id === CRS_HOTEL_BOOKING_SOURCE) {
-        // If it's not a string, we can stringify it
-        cancellationPolicy = String(cancellationPolicy);
-      }
-
-      // Replace newlines with <br> to ensure line breaks in the HTML email
-      const formattedCancellationPolicy = (result[0].Api_id === CRS_HOTEL_BOOKING_SOURCE) ? cancellationPolicy.replace(/\n/g, '<br>') : cancellationPolicy;
 
       cancellationHtml = `<table style="width: 100%; margin-top: 15px;box-shadow: 0 0 2px 0 rgba(0,0,0,.08), 0 2px 8px 0 rgba(0,0,0,.16);">
                             <tbody>
@@ -3078,9 +2440,6 @@ async markupDetails(body: any, totalFare: any, exchangeRate: any = 1): Promise<a
                                     <tr>
                                         <td colspan="7"
                                             style="line-height:20px; font-size:14px; background: #fff; padding: 15px; color:#555" >
-                        
-                                            <span > ${formattedCancellationPolicy} </span>
-                                        
                                         </td>
                                         <td>
                                          

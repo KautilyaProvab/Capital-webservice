@@ -93,6 +93,11 @@ export class FlightController {
         return await this.flightService.fareQuote(body);
     }
 
+    @Post('fareBranded')
+    async fareBranded(@Body() body: any): Promise<any> {
+        return await this.flightService.fareBranded(body);
+    }
+
     @Post('extraServices')
     async extraServices(@Body() body: any): Promise<any> {
         return await this.flightService.extraServices(body);

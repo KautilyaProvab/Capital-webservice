@@ -24,5 +24,11 @@ export class PaymentGatewayController {
   async getWsPaymentGateWays(): Promise<any> {
       return await this.paymentGatewayService.getPaymentGateWays();
   }
+  
+    @HttpCode(200)
+    @Post('createOrder')
+    async createOrder(@Body() body: any): Promise<any> {
+      return await this.paymentGatewayService.createOrder(body);
+      }
 
 }

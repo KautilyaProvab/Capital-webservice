@@ -66,22 +66,13 @@ export class HotelController {
     return `Client IP is ${clientIp}`;
   }
 
-  @HttpCode(200)
-  @Post("searchHotel2")
-  async searchHotel(@Body() body: SearchHotelDto): Promise<any[]> {
-    return await this.hotelService.searchCRS(body);
-  }
   // Travelomatix APIs
   @HttpCode(200)
   @Post("searchHotels")
   async searchHotelTravelomatix(@Body() body: any): Promise<[]> {
     return await this.hotelService.hotelsAvailability(body);
   }
-  // @HttpCode(200)
-  // @Post("detailsCRS")
-  // async detailsCRS(@Body() body: any): Promise<[]> {
-  //   return await this.hotelService.hotelDetails2(body);
-  // }
+
   @HttpCode(200)
   @Post("InsertHotels")
   async CreateHotelHummingBird(@Body() body: any): Promise<[]> {
@@ -271,24 +262,6 @@ export class HotelController {
     return await this.hotelService.autoComplete(body);
   }
 
-  // @HttpCode(200)
-  // @Post('searchHotels')
-  // async searchHotels(@Body() body: any): Promise<any> {
-  //     return await this.hotelService.hotelsAvailability(body);
-  // }
-
-  // @HttpCode(200)
-  // @Post('hotelDetails')
-  // async hotelDetails(@Body() body: any): Promise<any> {
-  //     return await this.hotelService.hotelDetails(body);
-  // }
-
-  // @HttpCode(200)
-  // @Post('blockRooms')
-  // async blockRooms(@Body() body: any): Promise<any> {
-  //     return await this.hotelService.hotelsValuation(body);
-  // }
-
   @HttpCode(200)
   @Post("addPaxDetails")
   async addPaxDetails(@Body() body: any): Promise<any[]> {
@@ -342,30 +315,6 @@ export class HotelController {
   @Post("autoCompleteGoGlobal")
   async autoCompleteGoGlobal(@Body() body: any): Promise<any> {
     return await this.hotelService.autoCompleteGoGlobal(body);
-  }
-
-  @HttpCode(200)
-  @Post("searchHotelGoGlobal")
-  async searchHotelGoGlobal(@Body() body: any): Promise<any> {
-    return await this.hotelService.searchHotelGoGlobal(body);
-  }
-
-  @HttpCode(200)
-  @Post("hotelDetailsGoGlobal")
-  async hotelDetailsGoGlobal(@Body() body: any): Promise<any> {
-    return await this.hotelService.hotelDetailsGoGlobal(body);
-  }
-
-  @HttpCode(200)
-  @Post("blockRoomGoGlobal")
-  async blockRoomGoGlobal(@Body() body: any): Promise<any> {
-    return await this.hotelService.blockRoomGoGlobal(body);
-  }
-
-  @HttpCode(200)
-  @Post("reservationGoGlobal")
-  async reservationGoGlobal(@Body() body: any): Promise<any> {
-    return await this.hotelService.reservationGoGlobal(body);
   }
 
   @Post("listHotelTopDestinationsAdmin")

@@ -3,7 +3,6 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RedisModule } from "nestjs-redis";
-import { ActivityModule } from "./activity/activity.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
@@ -17,11 +16,7 @@ import { InsuranceModule } from "./insurance/insurance.module";
 import { PaymentGatewayModule } from "./payment-gateway/payment-gateway.module";
 import { UserModule } from "./user/user.module";
 import { environment } from "./environment/environment.prod";
-import { BusModule } from "./bus/bus.module";
-import { TransferModule } from "./transfer/transfer.module";
-import { TourModule } from "./tour/tour.module";
 import { SupplierModule } from './supplier/supplier.module';
-import { BundleBookingModule } from "./bundle-booking/bundle-booking.module";
 import { TransportConfigModule } from "./transport-config.module";
 import { TransportConfigService } from "./transport-config.service";
 
@@ -37,17 +32,12 @@ const RedisPassword = process.env.redisPassword ? `:${process.env.redisPassword}
 		GlobalModule,
 		RedisModule.register({ url: `redis://${RedisPassword}localhost:6379` }),
 		FlightModule,
-		ActivityModule,
 		HomeModule,
 		HotelModule,
-		TourModule,
-		BusModule,
-		TransferModule,
 		UserModule,
 		CoreModule,
 		InsuranceModule,
 		PaymentGatewayModule,
-		BundleBookingModule,
 		TypeOrmModule.forRoot({
 			type: "mysql",
             host: "54.198.46.240",

@@ -1,15 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { BaseApi } from "../../base.api";
 import {
-  HOTELBEDS_HOTEL_BOOKING_SOURCE,
   META_TL_HOTEL_COURSE,
-  TMX_HOTEL_BOOKING_SOURCE,
-  TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE,
-  STUBA_HOTEL_BOOKING_SOURCE,
-  DOTW_HOTEL_BOOKING_SOURCE,
-  HUMMING_BIRD_BOOKING_SOURCE,
-  HYPER_GUEST_BOOKING_SOURCE,
-  CRS_HOTEL_BOOKING_SOURCE,
   IRIX_HOTEL_BOOKING_SOURCE
 } from "../../constants";
 import { HotelDbService } from "./hotel-db.service";
@@ -55,15 +47,6 @@ import {
   TopHotelDestinationsDto,
 } from "./swagger";
 import { formatDate } from '../../app.helper';
-import { GoGlobalService } from "./third-party-services";
-import { TravelomatixDotComService } from "./third-party-services/travelomatix-dot-com.service";
-import { HotelBedsService } from "./third-party-services/hotelbeds.service";
-import { TboHolidaysDotComService } from "./third-party-services/tboHolidays-dot-com";
-import { stubaDotComService } from "./third-party-services/stuba.-dot-com";
-import { DotwDotComService } from "./third-party-services/dotw-dot-com";
-import { HummingBirdDotComService } from "./third-party-services/hmbt-dot-com";
-import { HyperGuestDotComService } from "./third-party-services/hyper-guest-dot-com";
-import { HoterlCrsService } from "./third-party-services/hotel-crs.service";
 import { IRIXService } from "./third-party-services/irix.service";
 import { RedisServerService } from "apps/webservice/src/shared/redis-server.service";
 
@@ -71,66 +54,18 @@ import { RedisServerService } from "apps/webservice/src/shared/redis-server.serv
 export class HotelService extends BaseApi {
   private currentSuppliers: any = [];
   constructor(
-    private travelomatixDotComService: TravelomatixDotComService,
-    private HotelBedsService: HotelBedsService,
     private hotelDbService: HotelDbService,
-    private goglobal: GoGlobalService,
-    private tboHolidaysDotComService: TboHolidaysDotComService,
-    private stubaDotComService: stubaDotComService,
-    private DotwDotComService: DotwDotComService,
-    private HummingBirdDotComService: HummingBirdDotComService,
-    private HyperGuestDotComService: HyperGuestDotComService,
-    private hotelCrsService: HoterlCrsService,
+
     private redisServerService: RedisServerService,
     private irixService: IRIXService
   ) {
     super();
-    // this.currentSuppliers.push({ name: TMX_HOTEL_BOOKING_SOURCE, service: this.travelomatixDotComService });
-    this.currentSuppliers.push({
-      name: TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE,
-      service: this.tboHolidaysDotComService,
-    });
-    this.currentSuppliers.push({
-      name: HOTELBEDS_HOTEL_BOOKING_SOURCE,
-      service: this.HotelBedsService,
-    });
-    this.currentSuppliers.push({
-      name: STUBA_HOTEL_BOOKING_SOURCE,
-      service: this.stubaDotComService,
-    });
-    this.currentSuppliers.push({
-      name: DOTW_HOTEL_BOOKING_SOURCE,
-      service: this.DotwDotComService,
-    });
-    this.currentSuppliers.push({
-      name: HUMMING_BIRD_BOOKING_SOURCE,
-      service: this.HummingBirdDotComService,
-    });
-    this.currentSuppliers.push({
-      name: HYPER_GUEST_BOOKING_SOURCE,
-      service: this.HyperGuestDotComService,
-    });
-    // this.currentSuppliers.push({
-    //   name: CRS_HOTEL_BOOKING_SOURCE,
-    //   service: this.hotelCrsService,
-    // });
     this.currentSuppliers.push({
       name: IRIX_HOTEL_BOOKING_SOURCE,
       service: this.irixService,
     });
   }
 
-  async searchCRS(body: any): Promise<any> {
-    return await this.hotelCrsService.search(body);
-  }
-//   async hotelDetails2(body: any): Promise<any> {
-//     return await this.hotelCrsService.hotelDetails(body);
-//   }
-
-  // async hotelDetailsTravelomatix(body:any):Promise<any>{
-  //     const hotelDetailsTravelomatix = await this.travelomatixDotComService.getHotelDetails(body);
-  //     return hotelDetailsTravelomatix;
-  // }
   async roomListTravelomatix(body: any): Promise<any> {
     const source = this.currentSuppliers.find(
       (t) => t.name == body["booking_source"]
@@ -246,9 +181,6 @@ export class HotelService extends BaseApi {
   }
 
   async hotelsAvailability(body: any): Promise<any> {
-    if (body.booking_source == CRS_HOTEL_BOOKING_SOURCE) {
-      return this.hotelCrsService.search(body);
-    }
     var query = `SELECT BS.name,BS.source_key as booking_source, BS.authentication as check_auth 
                     FROM ws_apis BS join ws_api_credentials AC ON AC.ws_api_id=BS.id 
                     JOIN ws_api_maps DAM ON DAM.ws_api_id=BS.id 
@@ -285,7 +217,7 @@ export class HotelService extends BaseApi {
     // console.log("duplicatHotelList-",duplicatHotelList);
   }
     //get city and country id 
-    if(body.booking_source == HOTELBEDS_HOTEL_BOOKING_SOURCE||STUBA_HOTEL_BOOKING_SOURCE||HUMMING_BIRD_BOOKING_SOURCE||TBO_HOLIDAYS_HOTEL_BOOKING_SOURCE){
+    if(body.booking_source == IRIX_HOTEL_BOOKING_SOURCE){
     // var HotelCityCountryCode= await this.hotelDbService.HotelCityCountryCode(body['CityIds'][0]); 
     var HotelCityCountryCode= await this.hotelDbService.HotelCityCountryCode(body['CityIds'][0]); 
     
@@ -368,22 +300,6 @@ export class HotelService extends BaseApi {
   //goGlobal
   async autoCompleteGoGlobal(body: any): Promise<any> {
     return await this.hotelDbService.getAutoComplete(body);
-  }
-
-  async searchHotelGoGlobal(body: any): Promise<any> {
-    return await this.goglobal.search(body);
-  }
-
-  async hotelDetailsGoGlobal(body: any): Promise<any> {
-    return await this.goglobal.getHotelDetails(body);
-  }
-
-  async blockRoomGoGlobal(body: any): Promise<any> {
-    return await this.goglobal.hotelsValuation(body);
-  }
-
-  async reservationGoGlobal(body: any): Promise<any> {
-    return await this.goglobal.hotelsReservation(body);
   }
 
   async listHotelTopDestinationsAdmin(body: any): Promise<any> {

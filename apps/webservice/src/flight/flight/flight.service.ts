@@ -1,14 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { getManager } from "typeorm";
-import { SEARCH_ERROR_STRING, META_FLIGHT_COURSE, TMX_FLIGHT_BOOKING_SOURCE,SAFARI_BOOKING_SOURCE, FARE_FLIGHT_BOOKING_SOURCE, SABRE_FLIGHT_BOOKING_SOURCE, TRAVELPORT_FLIGHT_BOOKING_SOURCE } from "../../constants";
+import { SEARCH_ERROR_STRING, META_FLIGHT_COURSE,SAFARI_BOOKING_SOURCE } from "../../constants";
 import { RedisServerService } from "../../shared/redis-server.service";
 import { FlightDbService } from "./flight-db.service";
-import { TmxApiService } from "./third-party-services/tmx-api.service";
-import { SabreApiService } from "./third-party-services/sabre-api.service";
-import { TravelportApiService } from "./third-party-services/travelport-api.service";
 import { SafariService } from "./third-party-services/safari-api.service";
-
-import { FareApiService } from "./third-party-services/fare-api.service";
 import { getExceptionClassByCode } from "../../all-exception.filter";
 
 @Injectable()
@@ -21,16 +16,8 @@ export class FlightService {
     constructor(
         private flightDbService: FlightDbService,
         private redisServerService: RedisServerService,
-        private tmxApiService: TmxApiService,
-        private sabreApiService: SabreApiService,
-        private travelportApiService: TravelportApiService,
-        private fareApiService: FareApiService,
         private safariService: SafariService,
     ) {
-        this.suppliers.push({ name: TMX_FLIGHT_BOOKING_SOURCE, service: this.tmxApiService });
-        this.suppliers.push({ name: SABRE_FLIGHT_BOOKING_SOURCE, service: this.sabreApiService });
-        this.suppliers.push({ name: TRAVELPORT_FLIGHT_BOOKING_SOURCE, service: this.travelportApiService });
-        this.suppliers.push({ name: FARE_FLIGHT_BOOKING_SOURCE, service: this.fareApiService });
         this.suppliers.push({ name: SAFARI_BOOKING_SOURCE, service: this.safariService });
 
     }
@@ -77,12 +64,10 @@ export class FlightService {
                 body['Segments'][i]['Destination'] = (pattern.exec(body['Segments'][i]['Destination'])[1]).trim();
             }
         }
-
-        const result = await this.fareApiService.search(body);
         return {
             Search: {
                 FlightDataList: {
-                    JourneyList: [result]
+                    JourneyList: []
                 },
                 NearByAirports: []
             }
@@ -160,9 +145,6 @@ export class FlightService {
                 const result = await source['service'].search(body);
                 console.log("Result-",result);
                 // BookingTravelerRefObj[suppliers[i]['booking_source']] = result['BookingTravelerRefObj'];
-                if(suppliers[i]['booking_source']==TRAVELPORT_FLIGHT_BOOKING_SOURCE){
-                    CalenderList.push(result.CalenderList)
-                }
                 allResults.push(...result);
             }
             merged = [].concat.apply([], allResults);
@@ -319,6 +301,12 @@ export class FlightService {
         const source = this.suppliers.find(t => t.name == body['booking_source']);
         return await source['service'].fareQuote(body);
     }
+    async fareBranded(body: any): Promise<any> {
+        // return await this.traveloprtApiService.fareQuote(body);
+        const source = this.suppliers.find(t => t.name == body['booking_source']);
+        return await source['service'].fareBranded(body);
+    }
+
 
     async extraServices(body: any): Promise<any> {
         // return await this.traveloprtApiService.extraServices(body);
